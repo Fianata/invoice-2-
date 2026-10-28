@@ -1,0 +1,310 @@
+:root {
+    --bg-main: #f0f2f5; 
+    --bg-card: #ffffff; 
+    --sidebar-bg: #1e293b;
+    --primary: #3b82f6; 
+    --success: #10b981; 
+    --danger: #ef4444;
+    --text-main: #334155; 
+    --text-muted: #64748b; 
+    --border: #e2e8f0;
+}
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Segoe UI', system-ui, sans-serif; 
+}
+
+body { 
+    background-color: var(--bg-main); 
+    color: var(--text-main); 
+    display: flex; 
+    height: 100vh; 
+    overflow: hidden; 
+}
+
+.sidebar { 
+    width: 260px; 
+    background-color: var(--sidebar-bg); 
+    color: white; 
+    padding: 25px 20px; 
+    display: flex; 
+    flex-direction: column; 
+}
+
+.logo-area { 
+    border-bottom: 1px solid rgba(255,255,255,0.1); 
+    padding-bottom: 20px; 
+    margin-bottom: 20px; 
+}
+
+.logo-area h2 { 
+    font-size: 1.5rem; 
+    letter-spacing: 1px; 
+    color: #fff; 
+}
+
+.logo-area p { 
+    color: #94a3b8; 
+    font-size: 0.85rem; 
+}
+
+.module-status { 
+    margin-top: 10px; 
+}
+
+.main-content { 
+    flex: 1; 
+    padding: 20px 30px; 
+    display: flex; 
+    flex-direction: column; 
+    overflow-y: auto; 
+}
+
+.topbar { 
+    margin-bottom: 20px; 
+}
+
+.page-title { 
+    font-size: 1.8rem; 
+    color: #0f172a; 
+    font-weight: 700; 
+}
+
+.subtitle { 
+    color: var(--text-muted); 
+    font-size: 0.95rem; 
+    margin-top: 5px; 
+}
+
+.dashboard-grid { 
+    display: grid; 
+    grid-template-columns: 2fr 1fr; 
+    gap: 25px; 
+}
+
+.card { 
+    background: var(--bg-card); 
+    padding: 25px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
+}
+
+h3 { 
+    font-size: 1.1rem; 
+    color: #1e293b; 
+    margin-bottom: 15px; 
+}
+
+.form-row { 
+    display: flex; 
+    gap: 12px; 
+    margin-bottom: 20px; 
+}
+
+.input-base { 
+    flex: 1; 
+    padding: 12px 15px; 
+    border: 1px solid var(--border); 
+    border-radius: 6px; 
+    font-size: 0.95rem; 
+    transition: 0.3s; 
+}
+
+.input-base:focus { 
+    outline: none; 
+    border-color: var(--primary); 
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); 
+}
+
+.text-right { 
+    text-align: right; 
+}
+
+.table-container { 
+    overflow-x: auto; 
+    max-height: 350px; 
+    border: 1px solid var(--border); 
+    border-radius: 8px; 
+}
+
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+}
+
+th, td { 
+    padding: 12px 15px; 
+    border-bottom: 1px solid var(--border); 
+    text-align: left; 
+}
+
+th { 
+    background: #f8fafc; 
+    color: var(--text-muted); 
+    font-size: 0.85rem; 
+    position: sticky; 
+    top: 0; 
+}
+
+.total-display { 
+    background: #f8fafc; 
+    padding: 20px; 
+    border-radius: 8px; 
+    text-align: center; 
+    border: 2px dashed var(--primary); 
+    margin-bottom: 25px; 
+}
+
+.total-display h1 { 
+    color: var(--primary); 
+    font-size: 2.2rem; 
+}
+
+.calc-row { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 15px; 
+    font-weight: 600; 
+    font-size: 1.1rem; 
+}
+
+.highlight-green { 
+    color: var(--success); 
+    font-size: 1.3rem; 
+    margin-top: 20px; 
+    border-top: 1px solid var(--border); 
+    padding-top: 15px; 
+}
+
+.btn { 
+    padding: 12px; 
+    border: none; 
+    border-radius: 6px; 
+    font-weight: 600; 
+    cursor: pointer; 
+}
+
+.btn-primary { 
+    background: var(--primary); 
+    color: white; 
+}
+
+.btn-success { 
+    background: var(--success); 
+    color: white; 
+}
+
+.btn-danger { 
+    background: var(--danger); 
+    color: white; 
+}
+
+.print-only { 
+    display: none; 
+}
+
+/* =========================================
+   PENGATURAN CETAK & 6 GAYA TOKO UNIK
+   ========================================= */
+@media print {
+    @page {
+        margin: 0;
+        size: auto;
+    }
+
+    body * { 
+        visibility: hidden; 
+    }
+    
+    body { 
+        background: white; 
+        margin: 10mm; 
+        padding: 0; 
+        -webkit-print-color-adjust: exact; 
+        print-color-adjust: exact; 
+    }
+    
+    #printArea, #printArea * { 
+        visibility: visible; 
+    }
+    
+    #printArea { 
+        position: absolute; 
+        left: 0; 
+        top: 0; 
+        width: 100%; 
+        display: block !important; 
+        z-index: 1; 
+    }
+    
+    .lay-thermal { width: 80mm; margin: 0 auto; padding: 5mm; }
+    .lay-a5 { width: 148mm; min-height: 210mm; margin: 0 auto; padding: 15mm; box-sizing: border-box; position: relative; }
+    .lay-a4, .lay-sj { width: 210mm; min-height: 297mm; margin: 0 auto; padding: 20mm; box-sizing: border-box; position: relative; }
+    
+    .bg-watermark { display: none; pointer-events: none; }
+    .doc-header, .doc-body, .doc-footer, .doc-sign { position: relative; z-index: 10; }
+
+    .item-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: transparent; }
+    .print-logo { max-width: 70px; margin-bottom: 10px; display: block; }
+    .doc-sign { display: flex; justify-content: space-between; margin-top: 40px; text-align: center; font-size: 13px; }
+    .doc-footer { text-align: right; width: 100%; clear: both; }
+
+    /* Gaya 1 */
+    .mod-1 { font-family: 'Segoe UI', sans-serif; font-size: 12px; }
+    .mod-1 .doc-header { display: flex; justify-content: space-between; border-bottom: 2px solid var(--brand); padding-bottom: 15px; }
+    .mod-1 h1, .mod-1 h2 { color: var(--brand); }
+    .mod-1 .item-table th { background: #f1f5f9; border-bottom: 2px solid var(--brand); padding: 10px; text-align: left; }
+    .mod-1 .item-table td { border-bottom: 1px solid #e2e8f0; padding: 10px; }
+
+    /* Gaya 2 */
+    .mod-2 { font-family: 'Inter', sans-serif; font-size: 12px; text-align: center; }
+    .mod-2 .doc-header { display: flex; flex-direction: column; align-items: center; border-bottom: 1px dashed #cbd5e1; padding-bottom: 20px; }
+    .mod-2 .print-logo { margin: 0 auto 10px auto; border-radius: 50%; }
+    .mod-2 h1 { font-size: 18px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
+    .mod-2 .item-table th { border-top: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1; padding: 10px; text-align: center !important; }
+    .mod-2 .item-table td { border-bottom: 1px dotted #cbd5e1; padding: 10px; text-align: center !important; }
+
+    /* Gaya 3 */
+    .mod-3 { font-family: 'Georgia', serif; font-size: 13px; color: #111; border: 3px double var(--brand); padding: 25px; min-height: 85vh; }
+    .mod-3 .doc-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #111; padding-bottom: 20px; }
+    .mod-3 h1 { font-size: 22px; font-weight: normal; letter-spacing: 3px; color: var(--brand); }
+    .mod-3 .item-table th { border-top: 2px solid #111; border-bottom: 2px solid #111; font-weight: normal; font-style: italic; padding: 12px; }
+    .mod-3 .item-table td { border-bottom: 1px solid #e5e7eb; padding: 12px; }
+
+    /* Gaya 4 */
+    .mod-4 { font-family: 'Arial Black', Impact, sans-serif; font-size: 11px; }
+    .mod-4 .doc-header { display: flex; justify-content: space-between; background: #0f172a !important; color: white !important; padding: 20px; border-left: 10px solid var(--brand); margin-bottom: 20px; }
+    .mod-4 .doc-header * { color: white !important; }
+    .mod-4 .item-table { border: 3px solid #0f172a; }
+    .mod-4 .item-table th { background: #0f172a !important; color: white !important; padding: 10px; border: 1px solid #fff; }
+    .mod-4 .item-table td { border: 1px solid #0f172a; padding: 10px; font-weight: bold; }
+
+    /* Gaya 5 */
+    .mod-5 { font-family: 'Segoe UI', sans-serif; font-size: 12px; color: #334155; position: relative; }
+    .mod-5 .bg-watermark { display: block; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--wm) no-repeat center; background-size: 50%; opacity: 0.05; z-index: 0; }
+    .mod-5 .doc-header { display: flex; justify-content: space-between; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+    .mod-5 .item-table th { background: #166534 !important; color: white !important; padding: 10px; }
+    .mod-5 .item-table td { border-bottom: 1px solid #dcfce7; padding: 10px; }
+
+    /* Gaya 6 */
+    .mod-6 { font-family: 'Arial', sans-serif; font-size: 11px; color: #000; }
+    .mod-6 .doc-header { display: flex; justify-content: space-between; background: #e2e8f0 !important; padding: 15px; border: 2px solid #000; }
+    .mod-6 .item-table { border: 2px solid #000; }
+    .mod-6 .item-table th, .mod-6 .item-table td { border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 8px; }
+    .mod-6 .item-table th { background: #cbd5e1 !important; color: #000 !important; text-align: center !important; }
+
+    /* Khusus Format Thermal */
+    .lay-thermal { display: block !important; border: none !important; padding: 5mm !important; }
+    .lay-thermal * { order: 0 !important; clip-path: none !important; box-shadow: none !important; background: transparent !important; color: #000 !important; filter: none !important; border-radius: 0 !important; }
+    .lay-thermal .doc-header { display: block !important; text-align: center !important; border: none !important; padding: 5px !important; margin: 0 0 15px 0 !important; }
+    .lay-thermal .col-brand, .lay-thermal .col-meta { display: block !important; float: none !important; text-align: center !important; width: 100% !important; border: none !important; padding: 0 !important; margin: 5px 0 !important; }
+    .lay-thermal .print-logo { margin: 0 auto 5px auto !important; max-width: 60px !important; display: block !important; }
+    .lay-thermal .item-table th, .lay-thermal .item-table td { padding: 4px 2px !important; border: none !important; font-size: 11px !important; }
+    .lay-thermal .item-table th { border-bottom: 1px dashed #000 !important; border-top: 1px dashed #000 !important; }
+    .lay-thermal .bg-watermark { display: none !important; }
+    .lay-thermal .doc-footer { text-align: right !important; float: none !important; width: 100% !important; border: none !important; border-top: 1px dashed #000 !important; padding-top: 5px !important; margin: 10px 0 !important; }
+    .lay-thermal .thermal-sign { text-align: center; margin-top: 20px; border-top: 1px dashed #000; padding-top: 10px; font-size: 11px; }
+}
