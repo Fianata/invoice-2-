@@ -4,20 +4,14 @@
 const SUPABASE_URL = 'https://yrdsuepevxftxxkouajz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_zAK3nmIMuYtd0LIV3C72dg__D615Jfg';
 
-let supabase = null;
-try {
-    if (window.supabase && !window.supabaseClientInstance) {
-        window.supabaseClientInstance = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    }
-    supabase = window.supabaseClientInstance;
-} catch (err) {
-    console.error("Ralat memulakan Supabase:", err);
+if (!window.dbClient && window.supabase) {
+    window.dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
 
 // Cek Sesi Pengguna saat halaman dimuat
 document.addEventListener("DOMContentLoaded", async () => {
-    if (supabase) {
-        const { data: { session } } = await supabase.auth.getSession();
+    if (window.dbClient) {
+        const { data: { session } } = await window.dbClient.auth.getSession();
         if (session) {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('userEmailDisplay').innerText = session.user.email;
@@ -39,13 +33,13 @@ window.prosesLogin = async function prosesLogin() {
         return;
     }
 
-    if (!supabase) {
+    if (!window.dbClient) {
         errEl.innerText = "Koneksi Supabase belum siap!";
         errEl.style.display = 'block';
         return;
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await window.dbClient.auth.signInWithPassword({ email, password });
 
     if (error) {
         errEl.innerText = "Login gagal: " + error.message;
@@ -56,10 +50,9 @@ window.prosesLogin = async function prosesLogin() {
     }
 };
 
-// Fungsi Logout Global
 window.prosesLogout = async function prosesLogout() {
-    if (supabase) {
-        await supabase.auth.signOut();
+    if (window.dbClient) {
+        await window.dbClient.auth.signOut();
     }
     location.reload();
 };
@@ -110,7 +103,6 @@ function gantiWarnaNota() {
     document.documentElement.style.setProperty('--primary', item.warna);
 }
 
-// Manajemen Pelanggan
 function muatPelanggan() {
     const select = document.getElementById('pilihPelanggan');
     if (!select) return;
@@ -127,10 +119,8 @@ function simpanPelangganBaru() {
     let nama = document.getElementById('namaKlienBaru').value.trim();
     let kontak = document.getElementById('kontakKlienBaru').value.trim();
     if (!nama) return alert("Mohon masukkan nama klien terlebih dahulu.");
-    
     daftarPelanggan.push({ nama, kontak });
     localStorage.setItem('pos_customers', JSON.stringify(daftarPelanggan));
-    
     document.getElementById('namaKlienBaru').value = '';
     document.getElementById('kontakKlienBaru').value = '';
     muatPelanggan();
@@ -144,7 +134,6 @@ function pilihPelangganAktif() {
     document.getElementById('inputEkstra').value = `${p.nama} (${p.kontak})`;
 }
 
-// Manajemen Katalog Produk & Stok
 function muatKatalog() {
     const select = document.getElementById('pilihKatalog');
     if (!select) return;
@@ -161,12 +150,9 @@ function simpanProdukBaru() {
     let nama = document.getElementById('namaProdukBaru').value.trim();
     let harga = parseFloat(document.getElementById('hargaProdukBaru').value) || 0;
     let stok = parseInt(document.getElementById('stokProdukBaru').value) || 0;
-    
     if (!nama || harga <= 0) return alert("Mohon lengkapi nama dan harga produk.");
-    
     katalogProduk.push({ nama, harga, stok });
     localStorage.setItem('pos_catalog', JSON.stringify(katalogProduk));
-    
     document.getElementById('namaProdukBaru').value = '';
     document.getElementById('hargaProdukBaru').value = '';
     document.getElementById('stokProdukBaru').value = '';
@@ -178,7 +164,6 @@ function pilihProdukKatalog() {
     let index = document.getElementById('pilihKatalog').value;
     if (index === "") return;
     let prod = katalogProduk[index];
-    
     document.getElementById('nama').value = prod.nama;
     document.getElementById('harga').value = prod.harga;
     document.getElementById('qty').value = 1;
@@ -186,24 +171,18 @@ function pilihProdukKatalog() {
     document.getElementById('qty').focus();
 }
 
-// Manajemen Riwayat Struk Berdasarkan Tanggal
 function tampilkanRiwayat() {
     const container = document.getElementById('daftarRiwayat');
     if (!container) return;
-    
     if (riwayatTransaksi.length === 0) {
         container.innerHTML = `<p style="text-align: center; color: #94a3b8; font-size: 13px; margin:0;">Belum ada riwayat transaksi.</p>`;
         return;
     }
-
     let kelompokTanggal = {};
     riwayatTransaksi.forEach((trx, originalIndex) => {
-        if (!kelompokTanggal[trx.tanggal]) {
-            kelompokTanggal[trx.tanggal] = [];
-        }
+        if (!kelompokTanggal[trx.tanggal]) kelompokTanggal[trx.tanggal] = [];
         kelompokTanggal[trx.tanggal].push({ ...trx, originalIndex });
     });
-
     let html = '';
     for (let tgl in kelompokTanggal) {
         html += `<div style="margin-bottom: 8px; font-size: 12px; font-weight: bold; color: var(--primary); border-bottom: 1px solid #cbd5e1; padding-bottom: 3px;">📅 ${tgl}</div>`;
@@ -256,44 +235,29 @@ muatKatalog();
 tampilkanTabel();
 tampilkanRiwayat();
 
-// Upload Logo
 document.getElementById('logoUpload').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(evt) { 
-            logoBase64 = evt.target.result; 
-            localStorage.setItem('pos_logo', logoBase64); 
-            alert("Logo berhasil disimpan!"); 
-        };
+        reader.onload = function(evt) { logoBase64 = evt.target.result; localStorage.setItem('pos_logo', logoBase64); alert("Logo berhasil disimpan!"); };
         reader.readAsDataURL(file);
     }
 });
 
-// Upload Tanda Tangan
 document.getElementById('sigUpload').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(evt) { 
-            sigBase64 = evt.target.result; 
-            localStorage.setItem('pos_sig', sigBase64); 
-            alert("Tanda tangan digital berhasil disimpan!"); 
-        };
+        reader.onload = function(evt) { sigBase64 = evt.target.result; localStorage.setItem('pos_sig', sigBase64); alert("Tanda tangan digital berhasil disimpan!"); };
         reader.readAsDataURL(file);
     }
 });
 
-// Upload Stempel Digital
 document.getElementById('stampUpload').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(evt) { 
-            stampBase64 = evt.target.result; 
-            localStorage.setItem('pos_stamp', stampBase64); 
-            alert("Stempel digital berhasil disimpan!"); 
-        };
+        reader.onload = function(evt) { stampBase64 = evt.target.result; localStorage.setItem('pos_stamp', stampBase64); alert("Stempel digital berhasil disimpan!"); };
         reader.readAsDataURL(file);
     }
 });
@@ -307,16 +271,13 @@ function tambahBarang() {
     let diskon = parseFloat(document.getElementById("diskon").value) || 0;
     let qty = parseFloat(document.getElementById("qty").value) || 0;
     if (!nama || harga <= 0 || qty <= 0) return alert("Mohon lengkapi data item dengan benar.");
-    
     keranjang.push({ nama, harga, diskon, qty, subtotal: (harga - diskon) * qty });
-    
     document.getElementById("nama").value = ""; 
     document.getElementById("harga").value = ""; 
     document.getElementById("diskon").value = ""; 
     document.getElementById("qty").value = ""; 
     document.getElementById("pilihKatalog").value = "";
     document.getElementById("nama").focus();
-    
     simpanData(); 
     tampilkanTabel();
 }
@@ -344,39 +305,23 @@ function batal() { if (keranjang.length > 0 && confirm("Konfirmasi: Batalkan sel
 function buatHtmlDokumen(noNota, tanggal) {
     const layout = document.getElementById('pilihLayout').value;
     const model = document.getElementById('pilihModel').value;
-
     const namaToko = document.getElementById('namaToko').value.trim() || "";
     const kontak = document.getElementById('kontakToko').value.trim() || "";
-    
     const inputEkstra = document.getElementById('inputEkstra').value.trim() || "-";
     let tunai = parseFloat(document.getElementById('tunai').value) || 0;
-    
     let judulInvoice = "INVOICE";
     if (layout === 'lay-sj') judulInvoice = "DELIVERY NOTE";
     else if (layout === 'lay-thermal') judulInvoice = ""; 
     
     let dataBaru = {
-        noNota,
-        tanggal,
-        total: grandTotal,
-        items: [...keranjang],
-        namaToko,
-        kontakToko: kontak,
-        inputEkstra,
-        layout,
-        model,
+        noNota, tanggal, total: grandTotal, items: [...keranjang],
+        namaToko, kontakToko: kontak, inputEkstra, layout, model,
         warnaIndex: document.getElementById('warnaNota').value,
-        tunai,
-        judulInvoice,
-        logoBase64,
-        sigBase64,
-        stampBase64
+        tunai, judulInvoice, logoBase64, sigBase64, stampBase64
     };
-
     riwayatTransaksi.push(dataBaru);
     localStorage.setItem('pos_history', JSON.stringify(riwayatTransaksi));
     tampilkanRiwayat();
-
     return renderHtmlTemplate(dataBaru);
 }
 
@@ -384,8 +329,6 @@ function renderHtmlTemplate(trx) {
     const warnaBrand = dataWarna[trx.warnaIndex || 0].warna;
     const wmLogo = trx.logoBase64 ? `url(${trx.logoBase64})` : 'none';
     const tagLogo = trx.logoBase64 ? `<img src="${trx.logoBase64}" class="print-logo">` : '';
-    
-    // Render Tanda Tangan & Stempel Digital
     const tagSig = trx.sigBase64 ? `<img src="${trx.sigBase64}" style="max-height: 55px; display: block; margin: 0 auto;">` : '<br><br><br>';
     const tagStamp = trx.stampBase64 ? `<img src="${trx.stampBase64}" style="max-height: 65px; opacity: 0.85; position: absolute; left: -15px; top: -10px; z-index: 5; pointer-events: none;">` : '';
 
@@ -461,12 +404,7 @@ function prosesNotaBaru() {
     let tanggal = '';
     if (tipeTanggal === 'manual') {
         const valManual = document.getElementById('manualTanggal').value;
-        if (valManual) {
-            const parts = valManual.split('-');
-            tanggal = `${parts[2]}/${parts[1]}/${parts[0]}`;
-        } else {
-            tanggal = new Date().toLocaleDateString('id-ID');
-        }
+        tanggal = valManual ? `${valManual.split('-')[2]}/${valManual.split('-')[1]}/${valManual.split('-')[0]}` : new Date().toLocaleDateString('id-ID');
     } else {
         tanggal = new Date().toLocaleDateString('id-ID');
     }
@@ -485,7 +423,6 @@ function unduhPDF() {
     let trxMeta = prosesNotaBaru();
     const element = document.getElementById('printArea');
     element.innerHTML = buatHtmlDokumen(trxMeta.noNota, trxMeta.tanggal);
-    
     const opt = {
         margin:       10,
         filename:     `${trxMeta.noNota}.pdf`,
@@ -506,7 +443,6 @@ function unduhPDFUlang(index) {
     let trx = riwayatTransaksi[index];
     const element = document.getElementById('printArea');
     element.innerHTML = renderHtmlTemplate(trx);
-    
     const opt = {
         margin:       10,
         filename:     `${trx.noNota}.pdf`,
