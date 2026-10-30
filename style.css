@@ -1,310 +1,499 @@
-:root {
-    --bg-main: #f0f2f5; 
-    --bg-card: #ffffff; 
-    --sidebar-bg: #1e293b;
-    --primary: #3b82f6; 
-    --success: #10b981; 
-    --danger: #ef4444;
-    --text-main: #334155; 
-    --text-muted: #64748b; 
-    --border: #e2e8f0;
+/* =========================================================
+   INVOICE MAKER | POS WORKSPACE
+   Stylesheet dashboard, responsif, dan dokumen cetak
+   ========================================================= */
+:root{
+  --primary:#2458a6;--primary-dark:#173f7a;--primary-soft:#eaf1fc;
+  --sidebar-bg:#142d4e;--sidebar-soft:#1d3b60;--success:#16845b;--success-soft:#e8f7ef;
+  --danger:#c43d4b;--danger-soft:#fff0f1;--warning:#b7791f;
+  --text:#1c2b3e;--text-muted:#68788d;--border:#dfe6ef;--surface:#fff;
+  --surface-soft:#f5f7fb;--shadow:0 8px 28px rgba(23,48,79,.06);--radius:16px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#f3f6fb;color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit}
+button{transition:background .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid rgba(36,88,166,.22);outline-offset:2px}
+.app-shell{min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:258px;padding:28px 18px 18px;background:var(--sidebar-bg);color:#fff;display:flex;flex-direction:column;z-index:20;overflow-y:auto}
+.brand-lockup{display:flex;align-items:center;gap:12px;padding:2px 7px 22px;color:#fff;text-decoration:none}
+.brand-icon,.login-brand-mark{display:grid;place-items:center;background:#fff;color:var(--sidebar-bg);font-weight:850;letter-spacing:-.06em;border-radius:12px;flex:0 0 auto}
+.brand-icon{width:43px;height:43px;font-size:16px;box-shadow:0 5px 16px #081a2d44}
+.brand-copy{display:flex;flex-direction:column;line-height:1.25;gap:5px}.brand-copy strong{font-size:16px;letter-spacing:-.025em}.brand-copy small{font-size:10px;letter-spacing:.15em;color:#a8bdd6;font-weight:700}
+.sidebar-divider{height:1px;background:#ffffff1c;margin:0 4px 22px}
+.sidebar-label{margin:0 8px 10px;color:#8ea8c8;font-size:10px;font-weight:800;letter-spacing:.12em}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 12px;margin-bottom:5px;border-radius:9px;color:#c5d3e5;font-size:13px;font-weight:600}
+.nav-item-active{background:#ffffff15;color:#fff;box-shadow:inset 3px 0 #8db7ff}.nav-icon{width:20px;text-align:center;font-size:17px;color:#a9c7f1}
+.sidebar-spacer{flex:1;min-height:36px}
+.account-card{padding:15px 12px 12px;border:1px solid #ffffff20;background:#ffffff09;border-radius:12px}.account-card .sidebar-label{margin-left:0}.account-email{font-size:12px;line-height:1.5;overflow-wrap:anywhere;color:#fff;margin-bottom:13px}
+.btn-sidebar-logout{width:100%;padding:9px 10px;background:#ffffff10;color:#e8eff8;border:1px solid #ffffff2c;border-radius:8px;font-weight:650;font-size:12px;cursor:pointer}.btn-sidebar-logout:hover{background:#ffffff20}
+.sidebar-version{margin:14px 5px 0;color:#829bb9;font-size:10px}
+.main-content{margin-left:258px;padding:32px clamp(20px,3vw,44px) 20px;min-width:0;max-width:1800px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:24px;margin:0 0 24px}.eyebrow{margin:0 0 5px;color:var(--primary);font-size:10px;line-height:1.4;letter-spacing:.13em;font-weight:800}.page-title{margin:0;font-size:clamp(25px,2.3vw,34px);line-height:1.2;letter-spacing:-.045em;font-weight:800;color:#172b43}.subtitle{margin:8px 0 0;color:var(--text-muted);font-size:13px}.topbar-date{flex:0 0 auto;min-width:160px;padding:12px 15px;border:1px solid var(--border);border-radius:11px;background:#fff;display:flex;flex-direction:column;gap:4px}.date-label{font-size:9px;color:var(--text-muted);letter-spacing:.1em;font-weight:800}.topbar-date strong{font-size:13px;color:#293d55}
+.welcome-strip{display:flex;align-items:center;gap:14px;padding:16px 18px;margin-bottom:22px;border:1px solid #d9e6f8;background:linear-gradient(110deg,#eef5ff,#fff 85%);border-radius:13px}.welcome-symbol{width:36px;height:36px;display:grid;place-items:center;flex:0 0 auto;border-radius:10px;background:#dceaff;color:var(--primary);font-weight:900;font-size:18px}.welcome-strip strong{display:block;font-size:13px;color:#233c5b}.welcome-strip p{margin:3px 0 0;color:#64758a;font-size:12px}
+.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(290px,.78fr);align-items:start;gap:22px}.card{background:var(--surface);border:1px solid #e2e8f0;border-radius:var(--radius);box-shadow:var(--shadow)}.panel-left{padding:25px;min-width:0}.panel-right{display:grid;gap:18px;min-width:0}
+.section-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 7px}.section-heading h2,.history-heading h2{margin:0;color:#20344c;font-size:17px;line-height:1.3;letter-spacing:-.025em}.section-number{display:grid;place-items:center;min-width:34px;height:31px;padding:0 8px;border-radius:8px;background:#f0f4fa;color:#71839a;font-size:11px;font-weight:800}.section-help{margin:0 0 16px;color:var(--text-muted);font-size:12px}.section-divider{height:1px;background:var(--border);margin:25px 0}
+.form-field{display:flex;flex-direction:column;gap:7px;min-width:0}.form-field>label,.login-form>label{font-size:12px;font-weight:700;color:#43556c}.form-grid{display:grid;gap:13px;margin-top:14px;min-width:0}.two-columns{grid-template-columns:repeat(2,minmax(0,1fr))}.customer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.catalog-grid{grid-template-columns:minmax(0,1.4fr) minmax(100px,.8fr) minmax(90px,.65fr) auto;align-items:end}.item-entry-grid{grid-template-columns:minmax(150px,1.7fr) repeat(3,minmax(95px,.75fr)) auto;align-items:end}.form-action{justify-content:flex-end}.label-spacer{font-size:12px;visibility:hidden;line-height:1.2}.upload-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}.upload-grid small{font-size:10px;color:#8390a2;line-height:1.4}
+.input-base{width:100%;min-width:0;min-height:42px;padding:10px 12px;border:1px solid #d5deea;border-radius:9px;background:#fff;color:#24364c;font-size:13px;outline:none;transition:border-color .15s,box-shadow .15s,background .15s}.input-base::placeholder{color:#9aa6b6}.input-base:hover{border-color:#b8c7d9}.input-base:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(36,88,166,.09)}select.input-base{padding-right:32px;cursor:pointer}.file-input{padding:7px;font-size:11px;min-height:40px;background:#fbfcfe}.file-input::file-selector-button{border:0;border-radius:6px;padding:6px 8px;margin-right:8px;background:#eaf0f8;color:#314c6c;font-size:10px;font-weight:700;cursor:pointer}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:10px 14px;border:1px solid transparent;border-radius:9px;font-size:12px;font-weight:750;line-height:1.2;white-space:nowrap;cursor:pointer;text-decoration:none}.btn:hover{transform:translateY(-1px)}.btn:active{transform:translateY(0)}.btn-primary{background:var(--primary);color:#fff;box-shadow:0 3px 8px #2458a61c}.btn-primary:hover{background:var(--primary-dark);box-shadow:0 5px 12px #2458a626}.btn-secondary{background:#fff;border-color:#d4deea;color:#344b65}.btn-secondary:hover{background:#f4f7fb;border-color:#b9c9dc}.btn-danger{background:var(--danger);color:#fff}.btn-danger:hover{background:#a92f3c}.btn-quiet-danger{background:#fff;color:#b53c49;border-color:#f0cfd3}.btn-quiet-danger:hover{background:var(--danger-soft)}.btn-small{min-height:32px;padding:7px 10px;font-size:11px}
+.table-heading{display:flex;align-items:center;justify-content:space-between;margin:24px 0 12px}.table-heading h3{margin:0;font-size:14px;color:#2b3e54}.table-heading p{margin:3px 0 0;color:var(--text-muted);font-size:11px}.table-container{width:100%;overflow-x:auto;border:1px solid var(--border);border-radius:10px}.cart-table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;white-space:nowrap}.cart-table th{padding:12px 10px;text-align:left;background:#f5f7fb;color:#63748a;font-size:10px;text-transform:uppercase;letter-spacing:.045em;font-weight:800;border-bottom:1px solid var(--border)}.cart-table td{padding:12px 10px;border-bottom:1px solid #edf1f6;color:#43536a;vertical-align:middle}.cart-table tbody tr:last-child td{border-bottom:0}.cart-table tbody tr:hover{background:#fafcff}.cart-table td:nth-child(3),.cart-table td:nth-child(4),.cart-table td:nth-child(6){font-variant-numeric:tabular-nums}.cart-table td:nth-child(6){font-weight:800;color:#203954}.cart-table .btn-danger{min-height:28px;padding:4px 9px;border-radius:6px}
+.history-section{margin-top:28px;padding-top:23px;border-top:1px solid var(--border)}.history-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.history-heading .section-help{margin:5px 0 0}.history-list{display:grid;gap:8px;max-height:330px;overflow-y:auto;padding:12px;border:1px solid var(--border);border-radius:10px;background:#f8fafd}.history-list>div{min-width:0}.history-list .btn{min-height:28px;padding:5px 8px;font-size:10px}.empty-state{margin:0;padding:24px 10px;text-align:center;color:#8a98aa;font-size:12px}
+.summary-card{padding:22px;position:sticky;top:20px}.summary-topline{display:flex;align-items:center;gap:8px;color:#738399;font-size:9px;font-weight:850;letter-spacing:.1em}.status-dot{width:7px;height:7px;border-radius:50%;background:#20a36b;box-shadow:0 0 0 4px #e6f7ee}.total-caption{margin:23px 0 4px;color:#65768b;font-size:12px;font-weight:650}.total-amount{margin:0;overflow-wrap:anywhere;color:#173d70;font-size:clamp(25px,2.2vw,34px);line-height:1.2;letter-spacing:-.05em;font-weight:850;font-variant-numeric:tabular-nums}.summary-divider{height:1px;background:var(--border);margin:20px 0}.payment-field{margin-top:16px}.input-payment{font-size:15px;font-weight:750}.change-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:15px;padding:13px 14px;background:var(--success-soft);border:1px solid #d2efdf;border-radius:9px;color:#347456;font-size:12px}.change-row strong{font-size:15px;color:var(--success);font-variant-numeric:tabular-nums;text-align:right}
+.document-card{padding:22px}.document-card .section-heading{margin-bottom:19px}.radio-stack{display:grid;gap:8px}.radio-option{display:flex;align-items:flex-start;gap:10px;padding:11px;border:1px solid var(--border);border-radius:9px;cursor:pointer}.radio-option:has(input:checked){border-color:#a9c4eb;background:#f3f7ff}.radio-option input{margin:3px 0 0;accent-color:var(--primary)}.radio-option span{display:flex;flex-direction:column;gap:2px}.radio-option strong{font-size:12px;color:#354a63}.radio-option small{font-size:10px;color:#8190a3}.manual-date{margin-top:10px}.document-card>.form-field{margin-bottom:15px}.document-note{padding:12px 13px;margin:4px 0 17px;border:1px solid #e2eaf5;border-radius:9px;background:#f7f9fd}.document-note strong{font-size:11px;color:#4b617d}.document-note p{margin:4px 0 0;font-size:11px;line-height:1.55;color:#77869a}.document-actions{display:grid;gap:9px}.btn-action{width:100%;min-height:44px;font-size:12px}.app-footer{display:flex;justify-content:space-between;gap:12px;padding:22px 3px 6px;color:#8b98a9;font-size:10px}
+/* Login */
+.login-screen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:22px;background:radial-gradient(ellipse at top right,#234c78 0,transparent 48%),var(--sidebar-bg)}.login-card{width:min(100%,420px);padding:35px;background:#fff;border-radius:19px;box-shadow:0 25px 80px #06172c66}.login-brand-mark{width:52px;height:52px;margin:0 auto 20px;background:var(--primary);color:#fff;font-size:18px;border-radius:14px}.login-card>.eyebrow{text-align:center}.login-card h1{margin:0;text-align:center;color:#1a2e47;font-size:27px;letter-spacing:-.045em}.login-description{margin:9px 0 25px;text-align:center;color:#738196;font-size:12px}.login-form{display:grid;gap:9px}.login-form>label:not(:first-child){margin-top:7px}.login-form .btn{width:100%;margin-top:8px;min-height:45px}.form-error{margin:4px 0 0;color:var(--danger);font-size:12px}.login-footnote{margin:22px 0 0;text-align:center;color:#8a97a8;font-size:10px}
+.print-only{display:none}
+/* Responsive */
+@media(max-width:1350px){.sidebar{width:230px}.main-content{margin-left:230px;padding-left:24px;padding-right:24px}.dashboard-grid{grid-template-columns:minmax(0,1.45fr) minmax(280px,.8fr);gap:16px}.panel-left{padding:20px}.catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.item-entry-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.item-description{grid-column:span 2}.item-entry-grid .form-action{grid-column:span 2}.item-entry-grid .label-spacer{display:none}}
+@media(max-width:1050px){.sidebar{position:relative;width:auto;inset:auto;min-height:0;padding:14px 20px;flex-direction:row;align-items:center;gap:18px}.brand-lockup{padding:0}.sidebar-divider,.sidebar-label,.nav-item,.sidebar-spacer,.account-card,.sidebar-version{display:none}.main-content{margin-left:0;padding:25px 20px}.dashboard-grid{grid-template-columns:minmax(0,1fr) minmax(270px,.72fr)}.topbar{align-items:flex-start}}
+@media(max-width:760px){.sidebar{padding:12px 16px}.brand-icon{width:37px;height:37px}.brand-copy strong{font-size:14px}.main-content{padding:21px 13px}.topbar{display:block;margin-bottom:18px}.topbar-date{margin-top:15px;display:inline-flex;min-width:0}.welcome-strip{align-items:flex-start;padding:13px}.dashboard-grid{grid-template-columns:minmax(0,1fr)}.panel-left{padding:17px}.panel-right{grid-row:1}.summary-card{position:static;padding:18px}.document-card{padding:18px}.total-caption{margin-top:16px}.total-amount{font-size:29px}.upload-grid{grid-template-columns:1fr}.two-columns,.customer-grid,.catalog-grid,.item-entry-grid{grid-template-columns:1fr}.item-description,.item-entry-grid .form-action{grid-column:auto}.form-grid{gap:11px}.label-spacer{display:none}.form-action{justify-content:stretch}.form-action .btn{width:100%}.history-heading{align-items:flex-start}.history-heading .btn{flex:0 0 auto}.app-footer{font-size:9px}.cart-table{min-width:690px}}
+@media(max-width:420px){.login-card{padding:27px 21px}.history-heading{flex-direction:column}.history-heading .btn{width:100%}.app-footer{flex-direction:column;gap:3px}}
+/* =========================================================
+   DOKUMEN CETAK: class .lay-* dan .mod-* berasal dari script.js
+   ========================================================= */
+#printArea{color:#171717;font-family:Arial,Helvetica,sans-serif;background:#fff}
+#printArea .lay-thermal{width:80mm;max-width:80mm;margin:0 auto;padding:4mm 3mm;background:#fff;color:#111;font-family:"Courier New",monospace;font-size:10px;line-height:1.4}
+#printArea .lay-thermal .doc-header{display:block;text-align:center;border-bottom:1px dashed #222;padding-bottom:10px;margin-bottom:10px}
+#printArea .lay-thermal .col-brand{display:block;text-align:center;margin-bottom:8px}
+#printArea .lay-thermal .print-logo{display:block;max-width:35mm;max-height:18mm;object-fit:contain;margin:0 auto 5px}
+#printArea .lay-thermal .brand-info h2{font-size:15px;line-height:1.2;text-transform:uppercase;margin:0 0 4px;font-weight:800}
+#printArea .lay-thermal .brand-info p{font-size:9px;margin:0;white-space:pre-line}
+#printArea .lay-thermal .col-meta h1{font-size:12px;margin:5px 0;text-transform:uppercase}
+#printArea .lay-thermal .col-meta p{margin:2px 0;font-size:9px;overflow-wrap:anywhere}
+#printArea .lay-thermal .client-box{margin-top:5px;font-size:9px;overflow-wrap:anywhere}
+#printArea .lay-thermal .item-table{width:100%;border-collapse:collapse;font-size:9px;table-layout:auto}
+#printArea .lay-thermal .item-table th{padding:5px 2px;border-bottom:1px dashed #111;text-align:left;font-size:8px;text-transform:uppercase}
+#printArea .lay-thermal .item-table td{padding:5px 2px;vertical-align:top;border-bottom:1px dotted #bbb;overflow-wrap:anywhere}
+#printArea .lay-thermal .item-table th:nth-child(1),#printArea .lay-thermal .item-table td:nth-child(1){width:8%;text-align:center}
+#printArea .lay-thermal .item-table th:nth-child(2),#printArea .lay-thermal .item-table td:nth-child(2){width:42%;text-align:left}
+#printArea .lay-thermal .item-table th:nth-child(3),#printArea .lay-thermal .item-table td:nth-child(3){text-align:center}
+#printArea .lay-thermal .item-table th:nth-child(4),#printArea .lay-thermal .item-table td:nth-child(4),#printArea .lay-thermal .item-table th:nth-child(5),#printArea .lay-thermal .item-table td:nth-child(5){text-align:right}
+#printArea .lay-thermal .doc-footer{display:block;border-top:1px dashed #111;margin-top:8px;padding-top:8px}
+#printArea .lay-thermal .total-box h2{font-size:13px;text-align:right;margin:0 0 7px;overflow-wrap:anywhere}
+#printArea .lay-thermal .total-box p{font-size:9px;text-align:right;line-height:1.6;margin:0}
+#printArea .lay-thermal .doc-sign{display:block;text-align:center;margin-top:13px;font-size:9px}
+#printArea .lay-thermal .thermal-sign{border-top:1px dashed #111;padding-top:9px;margin-top:9px}
+#printArea .lay-thermal .bg-watermark{display:none}
+#printArea .lay-a5,#printArea .lay-a4,#printArea .lay-sj{position:relative;width:100%;margin:0 auto;padding:12mm 13mm;background:#fff;color:#202a36;font-family:Arial,Helvetica,sans-serif;font-size:10pt;line-height:1.45;overflow:hidden}
+#printArea .lay-a5{width:148mm;min-height:210mm;padding:10mm 11mm;font-size:9pt}
+#printArea .lay-a4,#printArea .lay-sj{width:210mm;min-height:297mm;padding:16mm 17mm}
+#printArea .doc-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding-bottom:18px;border-bottom:2px solid var(--brand,#2458a6);margin-bottom:20px;position:relative}
+#printArea .col-brand{display:flex;align-items:flex-start;gap:12px;min-width:0;max-width:58%}
+#printArea .print-logo{max-width:28mm;max-height:24mm;object-fit:contain;flex:0 0 auto}
+#printArea .brand-info h2{margin:0 0 5px;color:var(--brand,#2458a6);font-size:16pt;line-height:1.2;font-weight:800;overflow-wrap:anywhere}
+#printArea .brand-info p{margin:0;color:#5e6875;font-size:8.5pt;white-space:pre-line;overflow-wrap:anywhere}
+#printArea .col-meta{min-width:35%;text-align:right;overflow-wrap:anywhere}
+#printArea .col-meta h1{margin:0 0 8px;color:var(--brand,#2458a6);font-size:24pt;line-height:1.05;letter-spacing:.02em}
+#printArea .col-meta p{margin:3px 0;font-size:9pt;color:#485465}
+#printArea .client-box{display:inline-block;margin-top:8px;padding:7px 9px;background:#f3f6fa;border-left:3px solid var(--brand,#2458a6);text-align:left;font-size:8.5pt;max-width:100%;overflow-wrap:anywhere}
+#printArea .doc-body{position:relative;z-index:1}
+#printArea .item-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:9pt}
+#printArea .item-table th{padding:10px 8px;background:var(--brand,#2458a6);color:#fff;text-align:left;font-size:8pt;font-weight:700;border:1px solid var(--brand,#2458a6)}
+#printArea .item-table td{padding:10px 8px;border:1px solid #d9dfe7;vertical-align:top;overflow-wrap:anywhere}
+#printArea .item-table tbody tr:nth-child(even){background:#f7f9fc}
+#printArea .item-table th:first-child,#printArea .item-table td:first-child{width:7%;text-align:center}
+#printArea .item-table th:nth-child(2),#printArea .item-table td:nth-child(2){text-align:left}
+#printArea .item-table th:nth-child(3),#printArea .item-table td:nth-child(3){text-align:center}
+#printArea .item-table th:nth-child(4),#printArea .item-table td:nth-child(4),#printArea .item-table th:nth-child(5),#printArea .item-table td:nth-child(5){text-align:right}
+#printArea .doc-footer{display:flex;justify-content:flex-end;margin-top:18px;position:relative;z-index:1}
+#printArea .total-box{width:48%;min-width:220px}
+#printArea .total-box h2{margin:0;padding:13px 15px;background:#f1f5fa;border-top:2px solid var(--brand,#2458a6);color:#1d2c3e;text-align:right;font-size:15pt;overflow-wrap:anywhere}
+#printArea .total-box p{margin:9px 0 0;text-align:right;font-size:9pt;line-height:1.7}
+#printArea .doc-sign{display:flex;justify-content:space-between;gap:18px;margin-top:42px;position:relative;z-index:1;break-inside:avoid;text-align:center;font-size:8.5pt}
+#printArea .doc-sign>div{flex:1;min-width:0;position:relative}
+#printArea .doc-sign img{object-fit:contain}
+#printArea .bg-watermark{display:none}
+/* Variasi gaya invoice */
+#printArea .mod-1 .doc-header{border-bottom-width:2px}
+#printArea .mod-1 .item-table th{background:var(--brand,#2458a6)}
+#printArea .mod-2 .doc-header{border-bottom:1px solid #dce3ec;padding-bottom:14px}
+#printArea .mod-2 .col-meta h1{font-size:21pt;font-weight:500;letter-spacing:.06em}
+#printArea .mod-2 .item-table th{background:#f0f3f7;color:#34465d;border-color:#dfe5ed}
+#printArea .mod-2 .item-table td{border-left:0;border-right:0}
+#printArea .mod-2 .total-box h2{background:#fff;border-top:1px solid var(--brand,#2458a6);border-bottom:1px solid #d9dfe7}
+#printArea .mod-3 .doc-header{border-bottom:4px double var(--brand,#2458a6);padding-bottom:15px}
+#printArea .mod-3 .col-meta h1{font-size:20pt;letter-spacing:.09em}
+#printArea .mod-3 .item-table th{background:#26384d;border-color:#26384d}
+#printArea .mod-3 .total-box h2{background:#eef1f5;border-top:2px solid #26384d}
+#printArea .mod-4 .doc-header{padding:15px;background:#f5f8fc;border:0;border-left:5px solid var(--brand,#2458a6)}
+#printArea .mod-4 .item-table th{background:var(--brand,#2458a6)}
+#printArea .mod-4 .item-table tbody tr:nth-child(even){background:#f0f6ff}
+#printArea .mod-5 .doc-header{border-bottom:1px solid #bba77a;padding-bottom:17px}
+#printArea .mod-5 .brand-info h2,#printArea .mod-5 .col-meta h1{color:#725a2d}
+#printArea .mod-5 .item-table th{background:#4c4b47;border-color:#4c4b47}
+#printArea .mod-5 .total-box h2{background:#f7f3e9;border-top:2px solid #bba77a}
+#printArea .mod-6 .doc-header{border-bottom:1px solid #cfd6df;padding-bottom:12px}
+#printArea .mod-6 .col-meta h1{font-size:20pt}
+#printArea .mod-6 .item-table th{background:#eef2f6;color:#29394d;border-color:#d8dfe8}
+#printArea .mod-6 .item-table td{padding-top:8px;padding-bottom:8px}
+#printArea .lay-sj .doc-header{border-bottom:2px solid #283b51}
+#printArea .lay-sj .col-meta h1{font-size:21pt;color:#283b51}
+#printArea .lay-sj .item-table th{background:#e9eef4;color:#25364a;border-color:#cbd4df}
+#printArea .lay-sj .item-table td{height:13mm}
+#printArea .lay-sj .doc-sign{margin-top:28mm}
+#printArea .lay-sj .total-box{display:none}
+/* Dokumen di layar sebelum print */
+@media screen{
+ #printArea:not(:empty){display:block;max-width:100%;margin:24px auto;padding:16px;background:#e9edf3;overflow:auto}
+ #printArea .lay-a4,#printArea .lay-sj{box-shadow:0 4px 20px #172b431a}
+ #printArea .lay-a5{box-shadow:0 4px 20px #172b431a}
+}
+@media print{
+ @page{size:A4 portrait;margin:10mm}
+ html,body{width:auto!important;min-width:0!important;margin:0!important;padding:0!important;background:#fff!important;color:#000!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+ body>*{display:none!important}
+ #printArea{display:block!important;position:static!important;width:100%!important;margin:0!important;padding:0!important;background:#fff!important;overflow:visible!important}
+ #printArea .lay-thermal{width:72mm!important;max-width:72mm!important;margin:0!important;padding:0!important;box-shadow:none!important}
+ #printArea .lay-a5{width:100%!important;min-height:0!important;padding:0!important;box-shadow:none!important}
+ #printArea .lay-a4,#printArea .lay-sj{width:100%!important;min-height:0!important;padding:0!important;box-shadow:none!important}
+ #printArea .doc-header,#printArea .doc-footer,#printArea .doc-sign{break-inside:avoid}
+ #printArea .item-table tr{break-inside:avoid}
+ #printArea .item-table th{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ #printArea .bg-watermark{display:none!important}
 }
 
-* { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
-    font-family: 'Segoe UI', system-ui, sans-serif; 
+/* ===== PERAPIAN NOTA: tata letak dokumen lebih konsisten ===== */
+#printArea{box-sizing:border-box}
+#printArea *{box-sizing:border-box}
+#printArea .lay-a5,#printArea .lay-a4,#printArea .lay-sj{overflow:visible;min-height:0;color:#202a36}
+#printArea .doc-header{align-items:flex-start;gap:10mm;padding-bottom:7mm;margin-bottom:8mm}
+#printArea .col-brand{gap:4mm;max-width:57%;align-items:flex-start}
+#printArea .brand-info{min-width:0}
+#printArea .brand-info h2{font-size:15pt;line-height:1.25;margin-bottom:2mm}
+#printArea .brand-info p{font-size:8.5pt;line-height:1.45;overflow-wrap:anywhere}
+#printArea .col-meta{flex:0 0 40%;min-width:0}
+#printArea .col-meta h1{font-size:21pt;line-height:1.12;margin-bottom:3mm;overflow-wrap:anywhere}
+#printArea .col-meta p{font-size:8.5pt;line-height:1.45;margin:1mm 0}
+#printArea .document-parties{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6mm;padding:4mm 5mm;margin-bottom:8mm;border-radius:0;break-inside:avoid}
+#printArea .document-parties>div{gap:1.5mm}
+#printArea .party-label{font-size:7.5pt;letter-spacing:.06em}
+#printArea .document-parties strong{font-size:9pt;line-height:1.35;overflow-wrap:anywhere}
+#printArea .document-parties p{font-size:8.25pt;line-height:1.4}
+#printArea .item-table{table-layout:fixed;border-collapse:collapse;font-size:8.5pt;line-height:1.35}
+#printArea .item-table th{padding:3mm 2.5mm;font-size:7.5pt;line-height:1.3;vertical-align:middle;overflow-wrap:break-word}
+#printArea .item-table td{padding:3mm 2.5mm;line-height:1.4;vertical-align:top;overflow-wrap:anywhere;word-break:normal}
+#printArea .item-table th:first-child,#printArea .item-table td:first-child{width:8%}
+#printArea .item-table th:nth-child(2),#printArea .item-table td:nth-child(2){width:42%}
+#printArea .item-table th:nth-child(3),#printArea .item-table td:nth-child(3){width:10%}
+#printArea .lay-a5 .item-table th:nth-child(4),#printArea .lay-a5 .item-table td:nth-child(4){width:20%}
+#printArea .lay-a5 .item-table th:nth-child(5),#printArea .lay-a5 .item-table td:nth-child(5){width:20%}
+#printArea .lay-a4 .item-table th:nth-child(4),#printArea .lay-a4 .item-table td:nth-child(4){width:20%}
+#printArea .lay-a4 .item-table th:nth-child(5),#printArea .lay-a4 .item-table td:nth-child(5){width:20%}
+#printArea .item-table td.right,#printArea .item-table th.right{white-space:normal;text-align:right;font-variant-numeric:tabular-nums}
+#printArea .doc-footer{align-items:flex-start;gap:8mm;margin-top:8mm;break-inside:avoid}
+#printArea .payment-note{flex:1;max-width:48%;font-size:8pt;line-height:1.45}
+#printArea .payment-note p{margin-top:2mm}
+#printArea .total-box{width:48%;min-width:0;max-width:100%}
+#printArea .amount-row{gap:5mm;padding:2mm 0;font-size:8.5pt;line-height:1.35}
+#printArea .amount-row span{min-width:0}
+#printArea .amount-row strong,#printArea .amount-row h2{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+#printArea .grand-total-row{padding:3mm;align-items:center;gap:3mm}
+#printArea .grand-total-row h2{font-size:12pt;white-space:nowrap}
+#printArea .total-box h2{padding:3mm;font-size:12pt}
+#printArea .doc-sign{margin-top:18mm;gap:10mm;font-size:8pt;break-inside:avoid}
+#printArea .signature-space{height:18mm}
+#printArea .signature-stack{min-height:18mm}
+#printArea .signature-image{max-width:35mm;max-height:17mm}
+#printArea .stamp-image{max-width:20mm;max-height:20mm}
+#printArea .document-footer{margin-top:10mm;padding-top:3mm;font-size:7.5pt;overflow-wrap:anywhere}
+#printArea .lay-sj .item-table th:first-child,#printArea .lay-sj .item-table td:first-child{width:8%}
+#printArea .lay-sj .item-table th:nth-child(2),#printArea .lay-sj .item-table td:nth-child(2){width:48%}
+#printArea .lay-sj .item-table th:nth-child(3),#printArea .lay-sj .item-table td:nth-child(3){width:14%}
+#printArea .lay-sj .item-table th:nth-child(4),#printArea .lay-sj .item-table td:nth-child(4){width:30%}
+#printArea .lay-sj .item-table td{height:12mm}
+#printArea .lay-sj .doc-sign{margin-top:24mm}
+/* Nota thermal: kolom harga tidak boleh meluber dari kertas */
+#printArea .lay-thermal{width:72mm;max-width:72mm;padding:3mm 2mm;font-size:9pt;line-height:1.35;overflow-wrap:anywhere}
+#printArea .lay-thermal .doc-header{padding-bottom:3mm;margin-bottom:3mm}
+#printArea .lay-thermal .brand-info h2{font-size:12pt}
+#printArea .lay-thermal .brand-info p,#printArea .lay-thermal .col-meta p{font-size:8pt;line-height:1.35}
+#printArea .lay-thermal .col-meta h1{font-size:10pt;margin:2mm 0}
+#printArea .lay-thermal .thermal-table{width:100%;table-layout:fixed;border-collapse:collapse}
+#printArea .lay-thermal .thermal-table tr.thermal-item{display:block;width:100%}
+#printArea .lay-thermal .thermal-table td,
+#printArea .lay-thermal .thermal-table td:first-child{display:block;width:100%!important;max-width:100%;padding:2mm 0;border:0;border-bottom:1px dotted #bbb;vertical-align:top}
+#printArea .lay-thermal .thermal-product-name{display:block;width:100%;max-width:100%;font-weight:700;line-height:1.35;white-space:normal;overflow-wrap:break-word;word-break:normal}
+#printArea .lay-thermal .thermal-product-math{display:flex;width:100%;align-items:flex-start;justify-content:space-between;gap:2mm}
+#printArea .lay-thermal .thermal-product-math span:first-child{min-width:0;flex:1 1 auto;overflow-wrap:normal;word-break:normal}
+#printArea .lay-thermal .thermal-product-math span:last-child{flex:0 0 auto;text-align:right;white-space:nowrap}
+#printArea .lay-thermal .thermal-product-math{align-items:flex-start;font-size:8pt;gap:2mm}
+#printArea .lay-thermal .thermal-product-math span:last-child{flex-shrink:0;text-align:right}
+#printArea .lay-thermal .thermal-total-line{font-size:8pt;gap:2mm}
+#printArea .lay-thermal .total-box h2{font-size:11pt}
+#printArea .lay-thermal .total-box p{font-size:8pt}
+@media screen{
+ #printArea:not(:empty){padding:18px;overflow-x:auto}
+ #printArea .lay-a5{margin:0 auto 12px;box-shadow:0 4px 18px rgba(20,35,55,.12)}
+ #printArea .lay-a4,#printArea .lay-sj{margin:0 auto 12px;box-shadow:0 4px 18px rgba(20,35,55,.12)}
+}
+@media print{
+ @page{size:A4 portrait;margin:10mm}
+ #printArea .lay-a5{width:100%!important;padding:0!important}
+ #printArea .lay-a4,#printArea .lay-sj{width:100%!important;padding:0!important}
+ #printArea .lay-thermal{width:72mm!important;max-width:72mm!important;padding:0!important}
+ #printArea .document-parties,#printArea .doc-footer,#printArea .doc-sign{break-inside:avoid;page-break-inside:avoid}
+ #printArea .item-table thead{display:table-header-group}
+ #printArea .item-table tfoot{display:table-footer-group}
+ #printArea .item-table tr{break-inside:avoid;page-break-inside:avoid}
+ #printArea .document-footer{break-inside:avoid}
 }
 
-body { 
-    background-color: var(--bg-main); 
-    color: var(--text-main); 
-    display: flex; 
-    height: 100vh; 
-    overflow: hidden; 
+/* =========================================================
+   FINAL DESIGN SYSTEM: 6 IDENTITAS TOKO YANG BENAR-BENAR BERBEDA
+   Berlaku untuk pratinjau, cetak, dan PDF.
+   ========================================================= */
+#printArea .lay-a4,#printArea .lay-a5,#printArea .lay-sj{box-sizing:border-box;overflow:visible!important}
+#printArea .item-table{width:100%;table-layout:fixed;border-collapse:collapse}
+#printArea .item-table th{vertical-align:middle;white-space:normal;overflow-wrap:normal;word-break:normal}
+#printArea .item-table td{vertical-align:top;word-break:normal;overflow-wrap:break-word}
+#printArea .lay-a4 .item-table td:nth-child(4),#printArea .lay-a4 .item-table td:nth-child(5),#printArea .lay-a5 .item-table td:nth-child(4),#printArea .lay-a5 .item-table td:nth-child(5){white-space:nowrap;overflow-wrap:normal;font-variant-numeric:tabular-nums;font-size:8pt}
+#printArea .lay-a5 .item-table td:nth-child(4),#printArea .lay-a5 .item-table td:nth-child(5){font-size:7.1pt;padding-left:1mm;padding-right:1mm}
+#printArea .lay-thermal{width:72mm!important;max-width:72mm!important;padding:3mm 2.5mm!important;overflow:visible!important;font-family:Arial,Helvetica,sans-serif!important;line-height:1.35}
+#printArea .lay-thermal .thermal-table{display:block!important;width:100%!important;table-layout:fixed!important;border-collapse:collapse!important}
+#printArea .lay-thermal .thermal-table tbody{display:block!important;width:100%!important}
+#printArea .lay-thermal .thermal-table tr.thermal-item{display:block!important;width:100%!important;break-inside:avoid;page-break-inside:avoid}
+#printArea .lay-thermal .thermal-table td,#printArea .lay-thermal .thermal-table td:first-child{display:block!important;box-sizing:border-box!important;width:100%!important;max-width:100%!important;padding:2mm 0!important;border:0!important;border-bottom:1px dashed #bbb!important;white-space:normal!important}
+#printArea .lay-thermal .thermal-product-name{display:block!important;width:100%!important;max-width:100%!important;font-weight:700!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;line-height:1.35!important}
+#printArea .lay-thermal .thermal-product-math{display:flex!important;flex-direction:row!important;align-items:flex-start!important;justify-content:space-between!important;gap:2mm!important;width:100%!important;min-width:0!important;font-size:8pt!important}
+#printArea .lay-thermal .thermal-product-math span:first-child{flex:1 1 auto!important;min-width:0!important;white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important}
+#printArea .lay-thermal .thermal-product-math span:last-child{flex:0 0 auto!important;white-space:nowrap!important;text-align:right!important;font-variant-numeric:tabular-nums}
+#printArea .lay-thermal .doc-footer{display:block!important;width:100%!important}
+#printArea .lay-thermal .thermal-total-line{display:flex!important;justify-content:space-between!important;gap:3mm!important;width:100%!important;font-size:8pt}
+#printArea .lay-thermal .thermal-total-line strong{white-space:nowrap;font-variant-numeric:tabular-nums}
+#printArea .lay-thermal .total-box{width:100%!important;min-width:0!important;margin:2mm 0 0!important}
+#printArea .lay-thermal .total-box h2{font-size:11pt!important;white-space:normal!important;text-align:right!important}
+
+/* 1. Klasik toko umum: biru, tabel tegas, header standar. */
+#printArea .mod-1{--style-ink:#244f82;color:#263548;border:0;font-family:Arial,Helvetica,sans-serif}
+#printArea .mod-1 .doc-header{border-bottom:2px solid var(--brand,#2458a6);padding-bottom:7mm}
+#printArea .mod-1 .item-table th{background:var(--brand,#2458a6);color:#fff;border:1px solid var(--brand,#2458a6)}
+#printArea .mod-1 .item-table td{border:1px solid #d7dee8}
+#printArea .mod-1 .item-table tbody tr:nth-child(even){background:#f6f8fb}
+#printArea .mod-1 .document-parties{background:#f5f8fc;border:1px solid #dce5ef;border-radius:2mm}
+#printArea .mod-1 .grand-total-row{background:#edf3fa;border-top:2px solid var(--brand,#2458a6)}
+
+/* 2. Minimalis modern: putih, garis tipis, ruang lapang, tanpa blok tebal. */
+#printArea .mod-2{font-family:Arial,Helvetica,sans-serif;color:#343b45}
+#printArea .mod-2 .doc-header{border-bottom:1px solid #d8dde4;padding-bottom:9mm;margin-bottom:9mm}
+#printArea .mod-2 .brand-info h2,#printArea .mod-2 .col-meta h1{color:#333b46;font-weight:500;letter-spacing:.035em}
+#printArea .mod-2 .item-table th{background:#f1f3f5!important;color:#303844!important;border:0!important;border-bottom:1px solid #aeb7c2!important;text-transform:uppercase;letter-spacing:.04em}
+#printArea .mod-2 .item-table td{border:0!important;border-bottom:1px solid #e1e5ea!important;padding-top:4mm;padding-bottom:4mm}
+#printArea .mod-2 .item-table tbody tr:nth-child(even){background:#fff!important}
+#printArea .mod-2 .document-parties{background:#fff;border:0;border-top:1px solid #e0e4e9;border-bottom:1px solid #e0e4e9;padding-left:0;padding-right:0}
+#printArea .mod-2 .grand-total-row{background:#fff;border-top:1px solid #6c7682;border-bottom:1px solid #d8dde4}
+#printArea .mod-2 .total-box h2{font-weight:600;color:#303844}
+#printArea .mod-2 .document-footer{border-top:1px solid #e0e4e9;color:#7b838e}
+
+/* 3. Formal korporat: navy, double rule, hierarki dokumen resmi. */
+#printArea .mod-3{font-family:Georgia,'Times New Roman',serif;color:#243247;border-top:3px solid #26384d}
+#printArea .mod-3 .doc-header{border-bottom:4px double #26384d;padding-top:5mm;padding-bottom:8mm}
+#printArea .mod-3 .brand-info h2{font-family:Georgia,'Times New Roman',serif;text-transform:uppercase;letter-spacing:.035em;color:#26384d}
+#printArea .mod-3 .col-meta h1{font-family:Georgia,'Times New Roman',serif;color:#26384d;font-size:20pt;letter-spacing:.08em}
+#printArea .mod-3 .item-table th{background:#26384d!important;color:#fff!important;border:1px solid #26384d!important;text-transform:uppercase;letter-spacing:.025em}
+#printArea .mod-3 .item-table td{border:1px solid #c9d0d9}
+#printArea .mod-3 .item-table tbody tr:nth-child(even){background:#f0f2f5}
+#printArea .mod-3 .document-parties{background:#f7f8fa;border:1px solid #c9d0d9;border-radius:0}
+#printArea .mod-3 .grand-total-row{background:#e9edf2;border-top:2px solid #26384d}
+#printArea .mod-3 .doc-sign{border-top:1px solid #d5dbe3;padding-top:5mm}
+
+/* 4. Retail modern: aksen warna, blok header, zebra rows yang jelas. */
+#printArea .mod-4{font-family:Arial,Helvetica,sans-serif;color:#1f3448}
+#printArea .mod-4 .doc-header{padding:7mm;background:#f0f6fb;border:0;border-left:5px solid var(--brand,#2458a6);margin-bottom:8mm}
+#printArea .mod-4 .brand-info h2{font-size:17pt;color:#173f5f}
+#printArea .mod-4 .col-meta h1{font-size:21pt;color:#173f5f}
+#printArea .mod-4 .item-table th{background:var(--brand,#2458a6)!important;color:#fff!important;border:1px solid var(--brand,#2458a6)!important}
+#printArea .mod-4 .item-table td{border:1px solid #d4e0ea}
+#printArea .mod-4 .item-table tbody tr:nth-child(even){background:#eaf3fa!important}
+#printArea .mod-4 .document-parties{background:#f4f8fb;border:1px solid #d3e0eb;border-left:4px solid var(--brand,#2458a6)}
+#printArea .mod-4 .grand-total-row{background:#e4f0f8;border-top:3px solid var(--brand,#2458a6)}
+#printArea .mod-4 .document-footer{border-top:2px solid #d4e0ea}
+
+/* 5. Premium butik: warm ivory, aksen emas, serif dan garis elegan. */
+#printArea .mod-5{font-family:Georgia,'Times New Roman',serif;color:#49453e;border:1px solid #d8c9a7;padding:11mm!important}
+#printArea .mod-5 .doc-header{border-bottom:1px solid #b9a16d;padding-bottom:8mm}
+#printArea .mod-5 .brand-info h2,#printArea .mod-5 .col-meta h1{font-family:Georgia,'Times New Roman',serif;color:#765f32;letter-spacing:.045em}
+#printArea .mod-5 .col-meta h1{font-size:19pt}
+#printArea .mod-5 .item-table th{background:#4b4942!important;color:#fff!important;border:1px solid #4b4942!important;letter-spacing:.04em;text-transform:uppercase}
+#printArea .mod-5 .item-table td{border:1px solid #ded6c5}
+#printArea .mod-5 .item-table tbody tr:nth-child(even){background:#faf7ef!important}
+#printArea .mod-5 .document-parties{background:#fbf8f0;border:1px solid #e2d8c3}
+#printArea .mod-5 .grand-total-row{background:#f4eddb;border-top:2px solid #b9a16d}
+#printArea .mod-5 .total-box h2{background:#f4eddb;border-top:1px solid #b9a16d;color:#5b4927}
+#printArea .mod-5 .document-footer{border-top:1px solid #d8c9a7;color:#857653}
+
+/* 6. Gudang/distributor: ringkas, abu-abu, tabel operasional dan garis kuat. */
+#printArea .mod-6{font-family:Arial,Helvetica,sans-serif;color:#263442}
+#printArea .mod-6 .doc-header{border-bottom:3px solid #697887;padding-bottom:5mm;margin-bottom:6mm}
+#printArea .mod-6 .brand-info h2{color:#34495a;font-size:14pt;text-transform:uppercase}
+#printArea .mod-6 .col-meta h1{color:#34495a;font-size:19pt;letter-spacing:.025em}
+#printArea .mod-6 .document-parties{background:#f1f3f5;border:1px solid #cbd2d9;border-radius:0;padding:3mm 4mm;margin-bottom:6mm}
+#printArea .mod-6 .item-table th{background:#e4e8ec!important;color:#263442!important;border:1px solid #aeb8c2!important;text-transform:uppercase}
+#printArea .mod-6 .item-table td{border:1px solid #c8d0d8;padding-top:2.5mm;padding-bottom:2.5mm}
+#printArea .mod-6 .item-table tbody tr:nth-child(even){background:#f4f6f8!important}
+#printArea .mod-6 .grand-total-row{background:#e8ecef;border-top:2px solid #697887}
+#printArea .mod-6 .doc-sign{border-top:1px solid #cbd2d9;padding-top:4mm}
+#printArea .mod-6 .document-footer{border-top:1px solid #cbd2d9}
+
+@media print{
+  #printArea .lay-a4,#printArea .lay-a5,#printArea .lay-sj{overflow:visible!important;box-shadow:none!important}
+  #printArea .item-table tr{break-inside:avoid!important;page-break-inside:avoid!important}
+  #printArea .lay-thermal .thermal-item{break-inside:avoid!important;page-break-inside:avoid!important}
+  #printArea .mod-5{padding:7mm!important}
 }
 
-.sidebar { 
-    width: 260px; 
-    background-color: var(--sidebar-bg); 
-    color: white; 
-    padding: 25px 20px; 
-    display: flex; 
-    flex-direction: column; 
+
+/* =========================================================
+   SIX DISTINCT STORE IDENTITIES
+   Gaya 1-6 sengaja berbeda pada struktur, tipografi, tabel,
+   penekanan total, serta aturan struk thermal monokrom.
+   ========================================================= */
+/* 1 — Toko klasik: nota biru standar, rapi dan familier */
+#printArea .mod-1:not(.lay-thermal) .doc-header{border-bottom:2.5px solid var(--brand,#2458a6);padding-bottom:7mm}
+#printArea .mod-1:not(.lay-thermal) .item-table th{background:var(--brand,#2458a6);color:#fff;border-color:var(--brand,#2458a6);text-transform:none;letter-spacing:0}
+#printArea .mod-1:not(.lay-thermal) .item-table td{border-color:#d7dee8}
+#printArea .mod-1:not(.lay-thermal) .total-box h2{background:#edf3fb;border-top:3px solid var(--brand,#2458a6);color:#172b43}
+#printArea .mod-1:not(.lay-thermal) .document-parties{background:#f7f9fc;border:1px solid #dfe6ef}
+
+/* 2 — Minimalis modern: garis tipis, ruang lega, tanpa blok warna */
+#printArea .mod-2:not(.lay-thermal){font-family:Arial,Helvetica,sans-serif;color:#20252b}
+#printArea .mod-2:not(.lay-thermal) .doc-header{border:0;border-bottom:1px solid #bfc5cc;padding:0 0 8mm;margin-bottom:9mm}
+#printArea .mod-2:not(.lay-thermal) .brand-info h2{font-weight:500;letter-spacing:.01em;color:#20252b}
+#printArea .mod-2:not(.lay-thermal) .col-meta h1{font-size:20pt;font-weight:400;letter-spacing:.11em;color:#20252b}
+#printArea .mod-2:not(.lay-thermal) .document-parties{background:#fff;border:0;border-top:1px solid #e1e4e8;border-bottom:1px solid #e1e4e8;padding:5mm 0}
+#printArea .mod-2:not(.lay-thermal) .item-table th{background:#fff;color:#353b43;border:0;border-bottom:1.5px solid #343a40;padding-top:3mm;padding-bottom:3mm;text-transform:uppercase;letter-spacing:.04em}
+#printArea .mod-2:not(.lay-thermal) .item-table td{border:0;border-bottom:1px solid #e5e7eb;padding-top:3.5mm;padding-bottom:3.5mm}
+#printArea .mod-2:not(.lay-thermal) .item-table tbody tr:nth-child(even){background:#fff}
+#printArea .mod-2:not(.lay-thermal) .total-box h2{background:#fff;border-top:1px solid #20252b;border-bottom:3px double #20252b;color:#20252b;font-weight:600}
+#printArea .mod-2:not(.lay-thermal) .document-footer{border-top:1px solid #d7dce1;color:#777}
+
+/* 3 — Korporat formal: kepala dokumen navy, tabel tegas */
+#printArea .mod-3:not(.lay-thermal) .doc-header{background:#20364f;color:#fff;border:0;padding:8mm;margin-bottom:8mm}
+#printArea .mod-3:not(.lay-thermal) .brand-info h2,#printArea .mod-3:not(.lay-thermal) .col-meta h1{color:#fff}
+#printArea .mod-3:not(.lay-thermal) .brand-info p,#printArea .mod-3:not(.lay-thermal) .col-meta p{color:#e2eaf3}
+#printArea .mod-3:not(.lay-thermal) .col-meta h1{font-size:19pt;letter-spacing:.08em}
+#printArea .mod-3:not(.lay-thermal) .document-parties{background:#f0f3f7;border:1px solid #cbd4df;border-radius:0}
+#printArea .mod-3:not(.lay-thermal) .party-label{color:#20364f}
+#printArea .mod-3:not(.lay-thermal) .item-table th{background:#20364f;color:#fff;border-color:#20364f}
+#printArea .mod-3:not(.lay-thermal) .item-table td{border-color:#bfc9d5}
+#printArea .mod-3:not(.lay-thermal) .item-table tbody tr:nth-child(even){background:#f1f4f8}
+#printArea .mod-3:not(.lay-thermal) .total-box h2{background:#e7edf4;border-top:3px solid #20364f;color:#20364f}
+#printArea .mod-3:not(.lay-thermal) .document-footer{border-top:2px solid #20364f}
+
+/* 4 — Retail / toko harian: aksen hijau, pita total yang menonjol */
+#printArea .mod-4:not(.lay-thermal) .doc-header{background:#eff8f1;border:0;border-left:5px solid #218653;padding:7mm;margin-bottom:7mm}
+#printArea .mod-4:not(.lay-thermal) .brand-info h2,#printArea .mod-4:not(.lay-thermal) .col-meta h1{color:#17683f}
+#printArea .mod-4:not(.lay-thermal) .col-meta h1{font-size:21pt;letter-spacing:-.025em}
+#printArea .mod-4:not(.lay-thermal) .document-parties{background:#fff;border:1px solid #b9dfc7;border-left:4px solid #218653;border-radius:0}
+#printArea .mod-4:not(.lay-thermal) .item-table th{background:#218653;border-color:#218653;color:#fff}
+#printArea .mod-4:not(.lay-thermal) .item-table td{border-color:#d7e8dc}
+#printArea .mod-4:not(.lay-thermal) .item-table tbody tr:nth-child(even){background:#f2faf4}
+#printArea .mod-4:not(.lay-thermal) .total-box h2{background:#218653;border:0;color:#fff;padding:4mm}
+#printArea .mod-4:not(.lay-thermal) .grand-total-row{background:#e7f5eb;border-color:#218653}
+#printArea .mod-4:not(.lay-thermal) .grand-total-row h2{color:#145c37}
+
+/* 5 — Premium: tipografi serif, tinta arang, aksen emas */
+#printArea .mod-5:not(.lay-thermal){font-family:Georgia,'Times New Roman',serif;color:#292722}
+#printArea .mod-5:not(.lay-thermal) .doc-header{border-top:1px solid #b79b5b;border-bottom:1px solid #b79b5b;padding:7mm 0;margin-bottom:9mm}
+#printArea .mod-5:not(.lay-thermal) .brand-info h2,#printArea .mod-5:not(.lay-thermal) .col-meta h1{font-family:Georgia,'Times New Roman',serif;color:#6d5528}
+#printArea .mod-5:not(.lay-thermal) .col-meta h1{font-size:22pt;font-weight:400;letter-spacing:.04em}
+#printArea .mod-5:not(.lay-thermal) .document-parties{background:#fbf8f0;border:1px solid #dfd2b3;border-radius:0;padding:5mm}
+#printArea .mod-5:not(.lay-thermal) .party-label{color:#806a3d}
+#printArea .mod-5:not(.lay-thermal) .item-table th{background:#35332e;color:#f8f1df;border-color:#35332e;font-weight:600;letter-spacing:.03em}
+#printArea .mod-5:not(.lay-thermal) .item-table td{border-color:#ded7c8}
+#printArea .mod-5:not(.lay-thermal) .item-table tbody tr:nth-child(even){background:#fbf9f4}
+#printArea .mod-5:not(.lay-thermal) .total-box h2{background:#f6f0df;border-top:1px solid #b79b5b;border-bottom:1px solid #b79b5b;color:#5f4b25;font-family:Georgia,'Times New Roman',serif;font-weight:700}
+#printArea .mod-5:not(.lay-thermal) .document-footer{border-top:1px solid #b79b5b;color:#806a3d}
+
+/* 6 — Gudang / akuntansi: tabel padat, angka mudah diaudit */
+#printArea .mod-6:not(.lay-thermal){font-family:Arial,Helvetica,sans-serif;font-size:9pt;color:#25313d}
+#printArea .mod-6:not(.lay-thermal) .doc-header{border:1px solid #9aa8b7;border-bottom:3px solid #536b83;padding:5mm;margin-bottom:6mm}
+#printArea .mod-6:not(.lay-thermal) .brand-info h2{color:#354d65;font-size:14pt}
+#printArea .mod-6:not(.lay-thermal) .col-meta h1{color:#354d65;font-size:18pt;letter-spacing:.03em}
+#printArea .mod-6:not(.lay-thermal) .document-parties{background:#f4f6f8;border:1px solid #c7d0d9;padding:3mm 4mm;margin-bottom:5mm}
+#printArea .mod-6:not(.lay-thermal) .item-table{font-size:8pt}
+#printArea .mod-6:not(.lay-thermal) .item-table th{background:#dfe6ed;color:#263a4d;border:1px solid #aebbc8;padding:2mm 1.5mm}
+#printArea .mod-6:not(.lay-thermal) .item-table td{border:1px solid #c4cdd6;padding:2mm 1.5mm}
+#printArea .mod-6:not(.lay-thermal) .item-table tbody tr:nth-child(even){background:#f6f8fa}
+#printArea .mod-6:not(.lay-thermal) .doc-footer{margin-top:5mm;padding-top:4mm;border-top:1px solid #9eabb8}
+#printArea .mod-6:not(.lay-thermal) .amount-row{padding:1.5mm 0}
+#printArea .mod-6:not(.lay-thermal) .grand-total-row{background:#e8edf2;border:1px solid #9eabb8;padding:2.5mm}
+#printArea .mod-6:not(.lay-thermal) .grand-total-row h2{color:#253d55;font-size:11pt}
+#printArea .mod-6:not(.lay-thermal) .doc-sign{margin-top:12mm}
+
+/* Thermal tetap monokrom seperti struk toko; tiap model punya karakter tata letak */
+#printArea .lay-thermal.mod-1 .doc-header{display:block;text-align:center;border-bottom:1px dashed #111;padding-bottom:3mm}
+#printArea .lay-thermal.mod-1 .col-brand{display:block;max-width:100%;text-align:center}
+#printArea .lay-thermal.mod-1 .brand-info h2{font-weight:900;letter-spacing:.02em}
+#printArea .lay-thermal.mod-1 .col-meta h1{font-weight:900}
+#printArea .lay-thermal.mod-2 .doc-header{display:block;text-align:left;border-bottom:1px solid #555;padding-bottom:2mm}
+#printArea .lay-thermal.mod-2 .col-brand{display:block;max-width:100%}
+#printArea .lay-thermal.mod-2 .brand-info h2{font-weight:500}
+#printArea .lay-thermal.mod-2 .thermal-table td{border-bottom:1px solid #ddd!important}
+#printArea .lay-thermal.mod-2 .total-box h2{border-top:1px solid #111!important;border-bottom:1px solid #111}
+#printArea .lay-thermal.mod-3 .doc-header{display:block;text-align:center;border-bottom:3px double #111;padding-bottom:3mm}
+#printArea .lay-thermal.mod-3 .col-brand{display:block;max-width:100%;text-align:center}
+#printArea .lay-thermal.mod-3 .brand-info h2{font-weight:900;text-transform:uppercase}
+#printArea .lay-thermal.mod-3 .thermal-table td{border-bottom:1px dashed #111!important}
+#printArea .lay-thermal.mod-3 .total-box h2{border-top:2px solid #111!important;font-size:12pt}
+#printArea .lay-thermal.mod-4 .doc-header{display:block;text-align:center;border:2px solid #111;padding:2mm;margin-bottom:3mm}
+#printArea .lay-thermal.mod-4 .col-brand{display:block;max-width:100%;text-align:center}
+#printArea .lay-thermal.mod-4 .thermal-product-name{font-weight:900}
+#printArea .lay-thermal.mod-4 .thermal-table td{border-bottom:1px dotted #555!important}
+#printArea .lay-thermal.mod-4 .total-box h2{border:2px solid #111!important;padding:2mm!important;text-align:center}
+#printArea .lay-thermal.mod-5 .doc-header{display:block;text-align:center;border-top:1px solid #111;border-bottom:1px solid #111;padding:3mm 0}
+#printArea .lay-thermal.mod-5 .col-brand{display:block;max-width:100%;text-align:center}
+#printArea .lay-thermal.mod-5 .brand-info h2{font-family:Georgia,'Times New Roman',serif;font-weight:400}
+#printArea .lay-thermal.mod-5 .thermal-product-name{font-weight:500}
+#printArea .lay-thermal.mod-5 .thermal-table td{border-bottom:1px solid #bbb!important}
+#printArea .lay-thermal.mod-6 .doc-header{display:block;text-align:left;border-bottom:2px solid #111;padding-bottom:2mm}
+#printArea .lay-thermal.mod-6 .col-brand{display:block;max-width:100%}
+#printArea .lay-thermal.mod-6 .brand-info h2{font-size:10pt!important}
+#printArea .lay-thermal.mod-6 .col-meta h1{font-size:9pt!important;text-align:left}
+#printArea .lay-thermal.mod-6 .thermal-product-math{font-size:7.5pt!important}
+#printArea .lay-thermal.mod-6 .thermal-table td{padding:1.5mm 0!important;border-bottom:1px solid #aaa!important}
+#printArea .lay-thermal.mod-6 .total-box h2{font-size:10pt!important;border-top:2px solid #111!important}
+
+/* Jaga agar nama barang tidak pecah per huruf pada format lebar */
+#printArea .item-table td:nth-child(2){overflow-wrap:break-word;word-break:normal;hyphens:none}
+#printArea .item-table td.right{white-space:nowrap;overflow-wrap:normal;word-break:normal}
+#printArea .lay-a5 .item-table{font-size:7.7pt}
+#printArea .lay-a5 .item-table th,#printArea .lay-a5 .item-table td{padding-left:1.4mm;padding-right:1.4mm}
+#printArea .lay-thermal .thermal-product-name{word-break:normal;overflow-wrap:break-word;hyphens:none}
+
+/* Perbedaan karakter khusus untuk struk thermal 80 mm. */
+#printArea .lay-thermal.mod-1 .doc-header{border-bottom:1px dashed #111}
+#printArea .lay-thermal.mod-1 .brand-info h2{letter-spacing:.02em}
+#printArea .lay-thermal.mod-2 .doc-header{border-bottom:1px solid #777;padding-bottom:2mm;margin-bottom:2mm}
+#printArea .lay-thermal.mod-2 .brand-info h2{font-weight:500;text-transform:none;letter-spacing:.04em}
+#printArea .lay-thermal.mod-2 .col-meta h1{font-weight:500;letter-spacing:.05em}
+#printArea .lay-thermal.mod-2 .thermal-product-name{font-weight:500}
+#printArea .lay-thermal.mod-2 .thermal-item td{border-bottom:1px solid #ddd!important}
+#printArea .lay-thermal.mod-3 .doc-header{border-bottom:3px double #111;padding-bottom:3mm}
+#printArea .lay-thermal.mod-3 .brand-info h2{font-family:Georgia,'Times New Roman',serif;letter-spacing:.04em}
+#printArea .lay-thermal.mod-3 .col-meta h1{font-family:Georgia,'Times New Roman',serif;font-size:11pt}
+#printArea .lay-thermal.mod-4 .doc-header{border:1px solid #111;padding:2mm;margin-bottom:3mm}
+#printArea .lay-thermal.mod-4 .brand-info h2{text-transform:uppercase}
+#printArea .lay-thermal.mod-4 .thermal-item td{border-bottom:1px solid #888!important}
+#printArea .lay-thermal.mod-5 .doc-header{border-bottom:1px solid #555;padding-bottom:4mm}
+#printArea .lay-thermal.mod-5 .brand-info h2{font-family:Georgia,'Times New Roman',serif;font-weight:600;letter-spacing:.04em}
+#printArea .lay-thermal.mod-5 .col-meta h1{font-family:Georgia,'Times New Roman',serif;font-weight:500}
+#printArea .lay-thermal.mod-6{font-size:8.5pt!important;line-height:1.25!important}
+#printArea .lay-thermal.mod-6 .doc-header{border-bottom:2px solid #111;padding-bottom:2mm;margin-bottom:2mm}
+#printArea .lay-thermal.mod-6 .thermal-item td{padding:1.5mm 0!important;border-bottom:1px dotted #777!important}
+#printArea .lay-thermal.mod-6 .thermal-product-name{font-size:8.5pt;font-weight:600}
+
+/* FIX FINAL: detail barang pada nota thermal harus rata kiri seperti nota toko. */
+#printArea .lay-thermal .thermal-table,
+#printArea .lay-thermal .thermal-table tbody,
+#printArea .lay-thermal .thermal-table tr.thermal-item,
+#printArea .lay-thermal .thermal-table td,
+#printArea .lay-thermal .thermal-product-name,
+#printArea .lay-thermal .thermal-product-math,
+#printArea .lay-thermal .thermal-product-math span:first-child {
+  text-align: left !important;
 }
-
-.logo-area { 
-    border-bottom: 1px solid rgba(255,255,255,0.1); 
-    padding-bottom: 20px; 
-    margin-bottom: 20px; 
-}
-
-.logo-area h2 { 
-    font-size: 1.5rem; 
-    letter-spacing: 1px; 
-    color: #fff; 
-}
-
-.logo-area p { 
-    color: #94a3b8; 
-    font-size: 0.85rem; 
-}
-
-.module-status { 
-    margin-top: 10px; 
-}
-
-.main-content { 
-    flex: 1; 
-    padding: 20px 30px; 
-    display: flex; 
-    flex-direction: column; 
-    overflow-y: auto; 
-}
-
-.topbar { 
-    margin-bottom: 20px; 
-}
-
-.page-title { 
-    font-size: 1.8rem; 
-    color: #0f172a; 
-    font-weight: 700; 
-}
-
-.subtitle { 
-    color: var(--text-muted); 
-    font-size: 0.95rem; 
-    margin-top: 5px; 
-}
-
-.dashboard-grid { 
-    display: grid; 
-    grid-template-columns: 2fr 1fr; 
-    gap: 25px; 
-}
-
-.card { 
-    background: var(--bg-card); 
-    padding: 25px; 
-    border-radius: 12px; 
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
-}
-
-h3 { 
-    font-size: 1.1rem; 
-    color: #1e293b; 
-    margin-bottom: 15px; 
-}
-
-.form-row { 
-    display: flex; 
-    gap: 12px; 
-    margin-bottom: 20px; 
-}
-
-.input-base { 
-    flex: 1; 
-    padding: 12px 15px; 
-    border: 1px solid var(--border); 
-    border-radius: 6px; 
-    font-size: 0.95rem; 
-    transition: 0.3s; 
-}
-
-.input-base:focus { 
-    outline: none; 
-    border-color: var(--primary); 
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); 
-}
-
-.text-right { 
-    text-align: right; 
-}
-
-.table-container { 
-    overflow-x: auto; 
-    max-height: 350px; 
-    border: 1px solid var(--border); 
-    border-radius: 8px; 
-}
-
-table { 
-    width: 100%; 
-    border-collapse: collapse; 
-}
-
-th, td { 
-    padding: 12px 15px; 
-    border-bottom: 1px solid var(--border); 
-    text-align: left; 
-}
-
-th { 
-    background: #f8fafc; 
-    color: var(--text-muted); 
-    font-size: 0.85rem; 
-    position: sticky; 
-    top: 0; 
-}
-
-.total-display { 
-    background: #f8fafc; 
-    padding: 20px; 
-    border-radius: 8px; 
-    text-align: center; 
-    border: 2px dashed var(--primary); 
-    margin-bottom: 25px; 
-}
-
-.total-display h1 { 
-    color: var(--primary); 
-    font-size: 2.2rem; 
-}
-
-.calc-row { 
-    display: flex; 
-    justify-content: space-between; 
-    margin-bottom: 15px; 
-    font-weight: 600; 
-    font-size: 1.1rem; 
-}
-
-.highlight-green { 
-    color: var(--success); 
-    font-size: 1.3rem; 
-    margin-top: 20px; 
-    border-top: 1px solid var(--border); 
-    padding-top: 15px; 
-}
-
-.btn { 
-    padding: 12px; 
-    border: none; 
-    border-radius: 6px; 
-    font-weight: 600; 
-    cursor: pointer; 
-}
-
-.btn-primary { 
-    background: var(--primary); 
-    color: white; 
-}
-
-.btn-success { 
-    background: var(--success); 
-    color: white; 
-}
-
-.btn-danger { 
-    background: var(--danger); 
-    color: white; 
-}
-
-.print-only { 
-    display: none; 
-}
-
-/* =========================================
-   PENGATURAN CETAK & 6 GAYA TOKO UNIK
-   ========================================= */
-@media print {
-    @page {
-        margin: 0;
-        size: auto;
-    }
-
-    body * { 
-        visibility: hidden; 
-    }
-    
-    body { 
-        background: white; 
-        margin: 10mm; 
-        padding: 0; 
-        -webkit-print-color-adjust: exact; 
-        print-color-adjust: exact; 
-    }
-    
-    #printArea, #printArea * { 
-        visibility: visible; 
-    }
-    
-    #printArea { 
-        position: absolute; 
-        left: 0; 
-        top: 0; 
-        width: 100%; 
-        display: block !important; 
-        z-index: 1; 
-    }
-    
-    .lay-thermal { width: 80mm; margin: 0 auto; padding: 5mm; }
-    .lay-a5 { width: 148mm; min-height: 210mm; margin: 0 auto; padding: 15mm; box-sizing: border-box; position: relative; }
-    .lay-a4, .lay-sj { width: 210mm; min-height: 297mm; margin: 0 auto; padding: 20mm; box-sizing: border-box; position: relative; }
-    
-    .bg-watermark { display: none; pointer-events: none; }
-    .doc-header, .doc-body, .doc-footer, .doc-sign { position: relative; z-index: 10; }
-
-    .item-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: transparent; }
-    .print-logo { max-width: 70px; margin-bottom: 10px; display: block; }
-    .doc-sign { display: flex; justify-content: space-between; margin-top: 40px; text-align: center; font-size: 13px; }
-    .doc-footer { text-align: right; width: 100%; clear: both; }
-
-    /* Gaya 1 */
-    .mod-1 { font-family: 'Segoe UI', sans-serif; font-size: 12px; }
-    .mod-1 .doc-header { display: flex; justify-content: space-between; border-bottom: 2px solid var(--brand); padding-bottom: 15px; }
-    .mod-1 h1, .mod-1 h2 { color: var(--brand); }
-    .mod-1 .item-table th { background: #f1f5f9; border-bottom: 2px solid var(--brand); padding: 10px; text-align: left; }
-    .mod-1 .item-table td { border-bottom: 1px solid #e2e8f0; padding: 10px; }
-
-    /* Gaya 2 */
-    .mod-2 { font-family: 'Inter', sans-serif; font-size: 12px; text-align: center; }
-    .mod-2 .doc-header { display: flex; flex-direction: column; align-items: center; border-bottom: 1px dashed #cbd5e1; padding-bottom: 20px; }
-    .mod-2 .print-logo { margin: 0 auto 10px auto; border-radius: 50%; }
-    .mod-2 h1 { font-size: 18px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
-    .mod-2 .item-table th { border-top: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1; padding: 10px; text-align: center !important; }
-    .mod-2 .item-table td { border-bottom: 1px dotted #cbd5e1; padding: 10px; text-align: center !important; }
-
-    /* Gaya 3 */
-    .mod-3 { font-family: 'Georgia', serif; font-size: 13px; color: #111; border: 3px double var(--brand); padding: 25px; min-height: 85vh; }
-    .mod-3 .doc-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #111; padding-bottom: 20px; }
-    .mod-3 h1 { font-size: 22px; font-weight: normal; letter-spacing: 3px; color: var(--brand); }
-    .mod-3 .item-table th { border-top: 2px solid #111; border-bottom: 2px solid #111; font-weight: normal; font-style: italic; padding: 12px; }
-    .mod-3 .item-table td { border-bottom: 1px solid #e5e7eb; padding: 12px; }
-
-    /* Gaya 4 */
-    .mod-4 { font-family: 'Arial Black', Impact, sans-serif; font-size: 11px; }
-    .mod-4 .doc-header { display: flex; justify-content: space-between; background: #0f172a !important; color: white !important; padding: 20px; border-left: 10px solid var(--brand); margin-bottom: 20px; }
-    .mod-4 .doc-header * { color: white !important; }
-    .mod-4 .item-table { border: 3px solid #0f172a; }
-    .mod-4 .item-table th { background: #0f172a !important; color: white !important; padding: 10px; border: 1px solid #fff; }
-    .mod-4 .item-table td { border: 1px solid #0f172a; padding: 10px; font-weight: bold; }
-
-    /* Gaya 5 */
-    .mod-5 { font-family: 'Segoe UI', sans-serif; font-size: 12px; color: #334155; position: relative; }
-    .mod-5 .bg-watermark { display: block; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--wm) no-repeat center; background-size: 50%; opacity: 0.05; z-index: 0; }
-    .mod-5 .doc-header { display: flex; justify-content: space-between; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-    .mod-5 .item-table th { background: #166534 !important; color: white !important; padding: 10px; }
-    .mod-5 .item-table td { border-bottom: 1px solid #dcfce7; padding: 10px; }
-
-    /* Gaya 6 */
-    .mod-6 { font-family: 'Arial', sans-serif; font-size: 11px; color: #000; }
-    .mod-6 .doc-header { display: flex; justify-content: space-between; background: #e2e8f0 !important; padding: 15px; border: 2px solid #000; }
-    .mod-6 .item-table { border: 2px solid #000; }
-    .mod-6 .item-table th, .mod-6 .item-table td { border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 8px; }
-    .mod-6 .item-table th { background: #cbd5e1 !important; color: #000 !important; text-align: center !important; }
-
-    /* Khusus Format Thermal */
-    .lay-thermal { display: block !important; border: none !important; padding: 5mm !important; }
-    .lay-thermal * { order: 0 !important; clip-path: none !important; box-shadow: none !important; background: transparent !important; color: #000 !important; filter: none !important; border-radius: 0 !important; }
-    .lay-thermal .doc-header { display: block !important; text-align: center !important; border: none !important; padding: 5px !important; margin: 0 0 15px 0 !important; }
-    .lay-thermal .col-brand, .lay-thermal .col-meta { display: block !important; float: none !important; text-align: center !important; width: 100% !important; border: none !important; padding: 0 !important; margin: 5px 0 !important; }
-    .lay-thermal .print-logo { margin: 0 auto 5px auto !important; max-width: 60px !important; display: block !important; }
-    .lay-thermal .item-table th, .lay-thermal .item-table td { padding: 4px 2px !important; border: none !important; font-size: 11px !important; }
-    .lay-thermal .item-table th { border-bottom: 1px dashed #000 !important; border-top: 1px dashed #000 !important; }
-    .lay-thermal .bg-watermark { display: none !important; }
-    .lay-thermal .doc-footer { text-align: right !important; float: none !important; width: 100% !important; border: none !important; border-top: 1px dashed #000 !important; padding-top: 5px !important; margin: 10px 0 !important; }
-    .lay-thermal .thermal-sign { text-align: center; margin-top: 20px; border-top: 1px dashed #000; padding-top: 10px; font-size: 11px; }
+#printArea .lay-thermal .thermal-product-math span:last-child {
+  text-align: right !important;
 }
