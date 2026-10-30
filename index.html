@@ -3,200 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPPG POS & Invoice Enterprise</title>
+    <meta name="theme-color" content="#142d4e">
+    <meta name="description" content="Aplikasi kasir, manajemen transaksi, dan pembuatan dokumen penjualan.">
+    <title>Invoice Maker | POS & Dokumen Penjualan</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Pustaka Supabase & html2pdf -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-
-    <!-- HALAMAN LOGIN -->
-    <div id="loginScreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--sidebar-bg); display: flex; justify-content: center; align-items: center; z-index: 9999;">
-        <div class="card" style="width: 380px; text-align: center; padding: 30px;">
-            <h2 style="color: var(--primary); margin-bottom: 5px;">INVOICE Maker</h2>
-            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 25px;">Silakan login dengan akun Anda</p>
-            
-            <input type="email" id="loginEmail" class="input-base" placeholder="Email Akun" style="width: 100%; margin-bottom: 15px;">
-            <input type="password" id="loginPassword" class="input-base" placeholder="Password" style="width: 100%; margin-bottom: 20px;">
-            
-            <button class="btn btn-primary" style="width: 100%; padding: 12px; cursor: pointer;" onclick="prosesLogin()">Masuk Aplikasi</button>
-            <p id="loginError" style="color: var(--danger); font-size: 12px; margin-top: 15px; display: none;"></p>
+    <!-- Login -->
+    <section id="loginScreen" class="login-screen" aria-label="Login aplikasi">
+        <div class="login-card card">
+            <div class="login-brand-mark" aria-hidden="true">IM</div>
+            <p class="eyebrow">WORKSPACE PENJUALAN</p>
+            <h1>Invoice Maker</h1>
+            <p class="login-description">Masuk untuk mengelola transaksi dan membuat dokumen penjualan.</p>
+            <form class="login-form" onsubmit="event.preventDefault(); prosesLogin();">
+                <label for="loginEmail">Alamat email</label>
+                <input type="email" id="loginEmail" class="input-base" placeholder="nama@perusahaan.com" autocomplete="username" required>
+                <label for="loginPassword">Kata sandi</label>
+                <input type="password" id="loginPassword" class="input-base" placeholder="Masukkan kata sandi" autocomplete="current-password" required>
+                <button class="btn btn-primary" type="submit">Masuk ke aplikasi</button>
+                <p id="loginError" class="form-error" role="alert" style="display:none;"></p>
+            </form>
+            <p class="login-footnote">Akses hanya untuk pengguna yang terdaftar.</p>
         </div>
-    </div>
+    </section>
 
-    <aside class="sidebar">
-        <div class="logo-area">
-            <h2>Invoice Maker</h2>
-            <p>Enterprise Edition</p>
-        </div>
-        <div class="module-status">
-            <p style="color: #64748b; font-size: 12px; font-weight: bold; margin-bottom: 5px;">STATUS AKUN:</p>
-            <div id="userEmailDisplay" style="background: var(--primary); color: white; padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; word-break: break-all; margin-bottom: 10px;">
-                Memuat...
-            </div>
-            <button class="btn btn-danger" style="width: 100%; font-size: 12px; padding: 6px; cursor: pointer;" onclick="prosesLogout()">Keluar Akun</button>
-        </div>
-    </aside>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="brand-lockup" href="#" aria-label="Invoice Maker beranda">
+                <span class="brand-icon" aria-hidden="true">IM</span>
+                <span class="brand-copy"><strong>Invoice Maker</strong><small>POS WORKSPACE</small></span>
+            </a>
 
-    <main class="main-content">
-        <header class="topbar">
-            <div>
-                <h1 class="page-title">Sistem POS & Faktur</h1>
-                <p class="subtitle">Tanggal Sistem: <span id="tgl"></span></p>
-            </div>
-        </header>
+            <div class="sidebar-divider"></div>
+            <p class="sidebar-label">RUANG KERJA</p>
+            <div class="nav-item nav-item-active"><span class="nav-icon" aria-hidden="true">▦</span><span>Transaksi penjualan</span></div>
+            <div class="nav-item"><span class="nav-icon" aria-hidden="true">▤</span><span>Dokumen & nota</span></div>
+            <div class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span><span>Riwayat transaksi</span></div>
 
-        <div class="dashboard-grid">
-            <section class="panel-left card">
-                <div class="store-setup">
-                    <h3>Identitas, TTD & Stempel Nota</h3>
-                    <select id="warnaNota" class="input-base" style="width: 100%; margin-bottom: 15px; font-weight:bold; cursor:pointer;" onchange="gantiWarnaNota()"></select>
-                    
-                    <div class="form-row" style="margin-bottom: 12px;">
-                        <div style="flex: 1;">
-                            <label style="font-size: 11px; font-weight: bold; color: var(--text-muted); display: block; margin-bottom: 4px;">Logo Usaha:</label>
-                            <input type="file" id="logoUpload" class="input-base" accept="image/*" style="width: 100%; font-size: 12px;">
-                        </div>
-                        <div style="flex: 1;">
-                            <label style="font-size: 11px; font-weight: bold; color: var(--text-muted); display: block; margin-bottom: 4px;">Tanda Tangan (PNG):</label>
-                            <input type="file" id="sigUpload" class="input-base" accept="image/*" style="width: 100%; font-size: 12px;">
-                        </div>
-                        <div style="flex: 1;">
-                            <label style="font-size: 11px; font-weight: bold; color: var(--text-muted); display: block; margin-bottom: 4px;">Stempel Digital (PNG):</label>
-                            <input type="file" id="stampUpload" class="input-base" accept="image/*" style="width: 100%; font-size: 12px;">
-                        </div>
-                    </div>
+            <div class="sidebar-spacer"></div>
+            <section class="account-card" aria-label="Informasi akun">
+                <p class="sidebar-label">AKUN AKTIF</p>
+                <div id="userEmailDisplay" class="account-email">Memuat akun...</div>
+                <button class="btn btn-sidebar-logout" type="button" onclick="prosesLogout()">Keluar akun</button>
+            </section>
+            <p class="sidebar-version">Invoice Maker · Enterprise Edition</p>
+        </aside>
 
-                    <div class="form-row">
-                        <input type="text" id="namaToko" class="input-base" placeholder="Nama Usaha / Toko">
-                        <input type="text" id="kontakToko" class="input-base" placeholder="Alamat / Kontak">
-                    </div>
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">WORKSPACE / PENJUALAN</p>
+                    <h1 class="page-title">Sistem POS & Faktur</h1>
+                    <p class="subtitle">Kelola item, hitung pembayaran, dan siapkan dokumen transaksi.</p>
                 </div>
+                <div class="topbar-date">
+                    <span class="date-label">TANGGAL SISTEM</span>
+                    <strong id="tgl">Memuat tanggal...</strong>
+                </div>
+            </header>
 
-                <hr style="border: 1px solid #E2E8F0; margin: 20px 0;">
+            <section class="welcome-strip">
+                <div class="welcome-symbol" aria-hidden="true">✓</div>
+                <div>
+                    <strong>Transaksi baru</strong>
+                    <p>Lengkapi identitas usaha dan pelanggan, tambahkan item, lalu pilih format dokumen yang sesuai.</p>
+                </div>
+            </section>
 
-                <div class="customer-setup">
-                    <h3>Manajemen Database Pelanggan</h3>
-                    <div class="form-row" style="margin-bottom: 10px;">
+            <div class="dashboard-grid">
+                <section class="panel-left card">
+                    <div class="section-heading">
+                        <div><p class="eyebrow">PENGATURAN</p><h2>Identitas usaha</h2></div>
+                        <span class="section-number">01</span>
+                    </div>
+                    <p class="section-help">Informasi ini akan digunakan pada nota atau dokumen yang dicetak.</p>
+
+                    <div class="form-field">
+                        <label for="warnaNota">Warna identitas dokumen</label>
+                        <select id="warnaNota" class="input-base" onchange="gantiWarnaNota()"></select>
+                    </div>
+                    <div class="upload-grid">
+                        <div class="form-field">
+                            <label for="logoUpload">Logo usaha</label>
+                            <input type="file" id="logoUpload" class="input-base file-input" accept="image/*">
+                            <small>PNG, JPG, atau WebP</small>
+                        </div>
+                        <div class="form-field">
+                            <label for="sigUpload">Tanda tangan</label>
+                            <input type="file" id="sigUpload" class="input-base file-input" accept="image/png,image/*">
+                            <small>Gunakan gambar latar transparan.</small>
+                        </div>
+                        <div class="form-field">
+                            <label for="stampUpload">Stempel digital</label>
+                            <input type="file" id="stampUpload" class="input-base file-input" accept="image/png,image/*">
+                            <small>Opsional untuk dokumen formal.</small>
+                        </div>
+                    </div>
+                    <div class="form-grid two-columns">
+                        <div class="form-field">
+                            <label for="namaToko">Nama usaha / toko</label>
+                            <input type="text" id="namaToko" class="input-base" placeholder="Contoh: Toko Sumber Rezeki">
+                        </div>
+                        <div class="form-field">
+                            <label for="kontakToko">Alamat dan kontak usaha</label>
+                            <input type="text" id="kontakToko" class="input-base" placeholder="Alamat, nomor telepon, atau email">
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+                    <div class="section-heading">
+                        <div><p class="eyebrow">DATABASE</p><h2>Pelanggan</h2></div>
+                        <span class="section-number">02</span>
+                    </div>
+                    <div class="form-field">
+                        <label for="pilihPelanggan">Pilih pelanggan tersimpan</label>
                         <select id="pilihPelanggan" class="input-base" onchange="pilihPelangganAktif()"></select>
                     </div>
-                    <div class="form-row">
-                        <input type="text" id="namaKlienBaru" class="input-base" placeholder="Nama Klien Baru">
-                        <input type="text" id="kontakKlienBaru" class="input-base" placeholder="Alamat / Kontak Klien">
-                        <button class="btn btn-primary" onclick="simpanPelangganBaru()">Simpan Klien</button>
+                    <div class="form-grid customer-grid">
+                        <div class="form-field">
+                            <label for="namaKlienBaru">Nama pelanggan baru</label>
+                            <input type="text" id="namaKlienBaru" class="input-base" placeholder="Nama pelanggan / perusahaan">
+                        </div>
+                        <div class="form-field">
+                            <label for="kontakKlienBaru">Alamat / kontak pelanggan</label>
+                            <input type="text" id="kontakKlienBaru" class="input-base" placeholder="Alamat atau nomor kontak">
+                        </div>
+                        <div class="form-field form-action">
+                            <span class="label-spacer" aria-hidden="true">Aksi</span>
+                            <button class="btn btn-secondary" type="button" onclick="simpanPelangganBaru()">Simpan pelanggan</button>
+                        </div>
                     </div>
-                </div>
 
-                <hr style="border: 1px solid #E2E8F0; margin: 20px 0;">
-
-                <div class="catalog-setup">
-                    <h3>Katalog Produk & Stok</h3>
-                    <div class="form-row" style="margin-bottom: 10px;">
+                    <div class="section-divider"></div>
+                    <div class="section-heading">
+                        <div><p class="eyebrow">MANAJEMEN STOK</p><h2>Katalog produk</h2></div>
+                        <span class="section-number">03</span>
+                    </div>
+                    <div class="form-field">
+                        <label for="pilihKatalog">Ambil produk dari katalog</label>
                         <select id="pilihKatalog" class="input-base" onchange="pilihProdukKatalog()"></select>
                     </div>
-                    <div class="form-row">
-                        <input type="text" id="namaProdukBaru" class="input-base" placeholder="Nama Produk">
-                        <input type="number" id="hargaProdukBaru" class="input-base" placeholder="Harga Jual">
-                        <input type="number" id="stokProdukBaru" class="input-base" placeholder="Stok Awal">
-                        <button class="btn btn-primary" onclick="simpanProdukBaru()">Tambah Produk</button>
+                    <div class="form-grid catalog-grid">
+                        <div class="form-field">
+                            <label for="namaProdukBaru">Nama produk</label>
+                            <input type="text" id="namaProdukBaru" class="input-base" placeholder="Nama produk">
+                        </div>
+                        <div class="form-field">
+                            <label for="hargaProdukBaru">Harga jual (Rp)</label>
+                            <input type="number" id="hargaProdukBaru" class="input-base" placeholder="0" min="0">
+                        </div>
+                        <div class="form-field">
+                            <label for="stokProdukBaru">Stok awal</label>
+                            <input type="number" id="stokProdukBaru" class="input-base" placeholder="0" min="0">
+                        </div>
+                        <div class="form-field form-action">
+                            <span class="label-spacer" aria-hidden="true">Aksi</span>
+                            <button class="btn btn-secondary" type="button" onclick="simpanProdukBaru()">Tambah produk</button>
+                        </div>
                     </div>
-                </div>
 
-                <hr style="border: 1px solid #E2E8F0; margin: 20px 0;">
-
-                <h3>Entri Item Transaksi</h3>
-                <div class="form-row">
-                    <input type="text" id="nama" class="input-base" placeholder="Deskripsi Produk / Layanan">
-                    <input type="number" id="harga" class="input-base" placeholder="Harga Satuan">
-                    <input type="number" id="diskon" class="input-base" placeholder="Diskon (Rp)">
-                    <input type="number" id="qty" class="input-base" placeholder="Kuantitas">
-                    <button class="btn btn-primary" onclick="tambahBarang()">Tambahkan Item</button>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Deskripsi Item</th>
-                                <th>Harga</th>
-                                <th>Diskon</th>
-                                <th>Kuantitas</th>
-                                <th>Subtotal</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelKeranjang"></tbody>
-                    </table>
-                </div>
-
-                <div class="history-section" style="margin-top: 30px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <h3 style="margin: 0;">Riwayat Struk & Transaksi</h3>
-                        <button class="btn btn-danger" style="padding: 5px 10px; font-size: 11px; cursor: pointer;" onclick="hapusRiwayat()">Hapus Semua Riwayat</button>
+                    <div class="section-divider"></div>
+                    <div class="section-heading">
+                        <div><p class="eyebrow">KERANJANG</p><h2>Item transaksi</h2></div>
+                        <span class="section-number">04</span>
                     </div>
-                    <div id="daftarRiwayat" style="max-height: 250px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; padding: 10px; background: #f8fafc;">
-                        <p style="text-align: center; color: #94a3b8; font-size: 13px;">Belum ada riwayat transaksi.</p>
+                    <div class="form-grid item-entry-grid">
+                        <div class="form-field item-description">
+                            <label for="nama">Deskripsi produk / layanan</label>
+                            <input type="text" id="nama" class="input-base" placeholder="Nama barang atau layanan">
+                        </div>
+                        <div class="form-field">
+                            <label for="harga">Harga satuan (Rp)</label>
+                            <input type="number" id="harga" class="input-base" placeholder="0" min="0">
+                        </div>
+                        <div class="form-field">
+                            <label for="diskon">Diskon per unit (Rp)</label>
+                            <input type="number" id="diskon" class="input-base" placeholder="0" min="0">
+                        </div>
+                        <div class="form-field">
+                            <label for="qty">Kuantitas</label>
+                            <input type="number" id="qty" class="input-base" placeholder="1" min="0" step="any">
+                        </div>
+                        <div class="form-field form-action">
+                            <span class="label-spacer" aria-hidden="true">Aksi</span>
+                            <button class="btn btn-primary" type="button" onclick="tambahBarang()">+ Tambahkan item</button>
+                        </div>
                     </div>
-                </div>
-            </section>
 
-            <section class="panel-right card">
-                <div class="total-display">
-                    <p>TOTAL TAGIHAN</p>
-                    <h1 id="teksTotal">Rp 0</h1>
-                </div>
-
-                <div class="payment-area">
-                    <input type="text" id="inputEkstra" class="input-base" placeholder="Referensi (Klien / No. Meja / PO)" style="width: 100%; margin-bottom: 15px;">
-                    
-                    <div class="calc-row">
-                        <span>Pembayaran (Tunai)</span>
-                        <input type="number" id="tunai" class="input-base text-right" placeholder="0" oninput="hitungKembalian()">
+                    <div class="table-heading">
+                        <div><h3>Rincian keranjang</h3><p>Periksa jumlah dan harga sebelum membuat dokumen.</p></div>
                     </div>
-                    <div class="calc-row highlight-green">
-                        <span>Kembalian</span>
-                        <span id="txtKembalian">0</span>
+                    <div class="table-container">
+                        <table class="cart-table">
+                            <thead>
+                                <tr><th>No.</th><th>Deskripsi item</th><th>Harga</th><th>Diskon</th><th>Qty</th><th>Subtotal</th><th>Aksi</th></tr>
+                            </thead>
+                            <tbody id="tabelKeranjang"></tbody>
+                        </table>
                     </div>
-                </div>
 
-                <hr style="border: 1px solid #E2E8F0; margin: 20px 0;">
-                
-                <h3 style="font-size: 14px; text-align:center; margin-bottom:10px; color: #64748b;">KONFIGURASI DOKUMEN CETAK</h3>
-                
-                <div style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px;">
-                    <label style="font-size: 12px; font-weight: bold; color: var(--text-muted); display: block; margin-bottom: 8px;">PENGATURAN TANGGAL INVOICE:</label>
-                    <div style="display: flex; gap: 15px; margin-bottom: 8px; font-size: 13px; font-weight: 600;">
-                        <label style="cursor: pointer;"><input type="radio" name="tipeTanggal" value="otomatis" checked onclick="toggleTanggal(false)"> Otomatis (Hari Ini)</label>
-                        <label style="cursor: pointer;"><input type="radio" name="tipeTanggal" value="manual" onclick="toggleTanggal(true)"> Manual (Pilih Tanggal)</label>
-                    </div>
-                    <input type="date" id="manualTanggal" class="input-base" style="width: 100%; display: none; font-size: 13px;">
-                </div>
+                    <section class="history-section">
+                        <div class="history-heading">
+                            <div><p class="eyebrow">ARSIP</p><h2>Riwayat transaksi</h2><p class="section-help">Cetak ulang atau unduh kembali dokumen yang tersimpan di perangkat ini.</p></div>
+                            <button class="btn btn-danger btn-small" type="button" onclick="hapusRiwayat()">Hapus semua</button>
+                        </div>
+                        <div id="daftarRiwayat" class="history-list">
+                            <p class="empty-state">Belum ada riwayat transaksi.</p>
+                        </div>
+                    </section>
+                </section>
 
-                <select id="pilihLayout" class="input-base" style="width: 100%; margin-bottom: 10px; font-weight:bold; cursor:pointer;">
-                    <option value="lay-thermal">Format 1: Struk Kasir Thermal (80mm)</option>
-                    <option value="lay-a5">Format 2: Faktur Penjualan (A5)</option>
-                    <option value="lay-a4">Format 3: Invoice Dokumen Standar (A4)</option>
-                    <option value="lay-sj">Format 4: Surat Jalan / Delivery Note</option>
-                </select>
-                
-                <select id="pilihModel" class="input-base" style="width: 100%; margin-bottom: 20px; font-weight:bold; cursor:pointer;">
-                    <option value="mod-1">Gaya 1</option>
-                    <option value="mod-2">Gaya 2</option>
-                    <option value="mod-3">Gaya 3</option>
-                    <option value="mod-4">Gaya 4</option>
-                    <option value="mod-5">Gaya 5</option>
-                    <option value="mod-6">Gaya 6</option>
-                </select>
-                
-                <button class="btn btn-success" style="width: 100%; padding: 12px; font-size:1rem; margin-bottom:10px; cursor: pointer;" onclick="cetakMatrix()">Cetak Dokumen</button>
-                <button class="btn btn-primary" style="width: 100%; padding: 12px; font-size:1rem; margin-bottom:10px; cursor: pointer;" onclick="unduhPDF()">Unduh Dokumen (PDF)</button>
-                <button class="btn btn-danger" style="width: 100%; cursor: pointer;" onclick="batal()">Batalkan Transaksi</button>
-            </section>
-        </div>
-    </main>
-    <div id="printArea" class="print-only"></div>
+                <aside class="panel-right">
+                    <section class="card summary-card">
+                        <div class="summary-topline"><span class="status-dot"></span><span>RINGKASAN PEMBAYARAN</span></div>
+                        <p class="total-caption">Total tagihan</p>
+                        <h2 id="teksTotal" class="total-amount">Rp 0</h2>
+                        <div class="summary-divider"></div>
+                        <div class="form-field">
+                            <label for="inputEkstra">Referensi transaksi</label>
+                            <input type="text" id="inputEkstra" class="input-base" placeholder="Nama klien, nomor meja, atau PO">
+                        </div>
+                        <div class="form-field payment-field">
+                            <label for="tunai">Pembayaran tunai (Rp)</label>
+                            <input type="number" id="tunai" class="input-base input-payment" placeholder="Masukkan nominal pembayaran" min="0" oninput="hitungKembalian()">
+                        </div>
+                        <div class="change-row">
+                            <span>Kembalian</span>
+                            <strong id="txtKembalian">0</strong>
+                        </div>
+                    </section>
+
+                    <section class="card document-card">
+                        <div class="section-heading">
+                            <div><p class="eyebrow">PENGATURAN OUTPUT</p><h2>Dokumen cetak</h2></div>
+                            <span class="section-number">05</span>
+                        </div>
+                        <div class="form-field">
+                            <label>Tanggal dokumen</label>
+                            <div class="radio-stack">
+                                <label class="radio-option"><input type="radio" name="tipeTanggal" value="otomatis" checked onclick="toggleTanggal(false)"> <span><strong>Otomatis</strong><small>Menggunakan tanggal hari ini</small></span></label>
+                                <label class="radio-option"><input type="radio" name="tipeTanggal" value="manual" onclick="toggleTanggal(true)"> <span><strong>Pilih tanggal</strong><small>Tentukan tanggal dokumen</small></span></label>
+                            </div>
+                            <input type="date" id="manualTanggal" class="input-base manual-date" style="display:none;">
+                        </div>
+                        <div class="form-field">
+                            <label for="pilihLayout">Format dokumen</label>
+                            <select id="pilihLayout" class="input-base">
+                                <option value="lay-thermal">Struk kasir thermal · 80 mm</option>
+                                <option value="lay-a5">Faktur penjualan · A5</option>
+                                <option value="lay-a4">Invoice bisnis · A4</option>
+                                <option value="lay-sj">Surat jalan · Delivery note</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="pilihModel">Gaya visual dokumen</label>
+                            <select id="pilihModel" class="input-base">
+                                <option value="mod-1">Gaya 1 · Toko klasik biru</option>
+                                <option value="mod-2">Gaya 2 · Minimalis modern</option>
+                                <option value="mod-3">Gaya 3 · Korporat formal</option>
+                                <option value="mod-4">Gaya 4 · Retail hijau</option>
+                                <option value="mod-5">Gaya 5 · Premium emas</option>
+                                <option value="mod-6">Gaya 6 · Gudang & akuntansi</option>
+                            </select>
+                        </div>
+                        <div class="document-note"><strong>Catatan</strong><p>Pratinjau dan hasil cetak akan mengikuti format yang dipilih. Pastikan identitas usaha dan data transaksi sudah benar.</p></div>
+                        <div class="document-actions">
+                            <button class="btn btn-primary btn-action" type="button" onclick="cetakMatrix()"><span aria-hidden="true">▤</span> Cetak dokumen</button>
+                            <button class="btn btn-secondary btn-action" type="button" onclick="unduhPDF()"><span aria-hidden="true">↓</span> Unduh PDF</button>
+                            <button class="btn btn-quiet-danger btn-action" type="button" onclick="batal()">Batalkan transaksi</button>
+                        </div>
+                    </section>
+                </aside>
+            </div>
+
+            <footer class="app-footer">
+                <span>Invoice Maker</span>
+                <span>POS & dokumen penjualan</span>
+            </footer>
+        </main>
+    </div>
+
+    <div id="printArea" class="print-only" aria-hidden="true"></div>
     <script src="script.js"></script>
 </body>
 </html>
